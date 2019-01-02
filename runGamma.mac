@@ -1,0 +1,56 @@
+/run/initialize
+
+# Turn on for HepRep file
+/vis/open HepRepFile
+/vis/drawVolume
+/vis/scene/add/trajectories smooth
+/vis/scene/endOfEventAction accumulate 10
+
+# Could be gamma or e-
+/gps/particle gamma
+
+# Remember to also change TCCDist if you change this
+/gps/pos/centre 0 0 42.5 cm
+
+# Angular and spatial profile
+/gps/ang/type beam1d
+# 0.02 deg is FWHM of 1mrad at 2 GeV
+/gps/ang/sigma_r 0.02 deg
+
+# For a disk source
+/gps/pos/type Beam
+/gps/pos/shape Circle
+# sigma = r_FWHM / 2.35 = 0.425 um for 1 micron FWHM
+/gps/pos/sigma_r 0.425 um
+
+# For Gaussian spectrum
+#/gps/ene/type Gauss
+#/gps/ene/mono 1500 MeV
+#/gps/ene/sigma 1 MeV
+
+# For a flat spectrum
+/gps/ene/type Lin
+/gps/ene/min 50 MeV
+/gps/ene/max 50 MeV
+/gps/ene/gradient 0
+/gps/ene/intercept 1
+
+# For an exponential spectrum
+#/gps/ene/type Exp
+#/gps/ene/min 400 MeV
+#/gps/ene/max 400 MeV
+#/gps/ene/ezero 500 MeV
+
+# For realistic spectrum
+#/gps/ene/type Arb
+#/gps/hist/type energy
+#/gps/hist/file gemElectronSpectrum.dat
+#/gps/hist/inter Lin
+
+# Output file saved in ./data/*.root
+/B1/histo/setOutputFile Temp2
+
+/run/beamOn 10000
+
+# Turn on for HepRep file
+/vis/viewer/flush
