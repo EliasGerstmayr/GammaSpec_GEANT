@@ -3,7 +3,7 @@
 // CsI spectrometer
 
 // RAL Stack (2015)
-static const G4bool includespectrometer = true;
+static const G4bool includespectrometer = false;
 static const int Ncrystalsz = 33;
 static const int Ncrystalsy = 21;
 static const G4double firstcrystalz = 180.0*cm;
@@ -14,32 +14,46 @@ static const G4double crystalx = 50.0*mm;
 static const G4double crystalspacing = 5.0*mm;
 
 static const G4double dividerthickness = 0.49*mm;
-static const G4bool includeDividers = true;
+static const G4bool includeDividers = false;
 
 static const G4double frontplatethickness = 10.0*mm;
-static const G4bool includeplasticfrontplate = true; //if true replaces steel frontplate with plastic
-static const G4bool includefrontplate = true;
+static const G4bool includeplasticfrontplate = false; //if true replaces steel frontplate with plastic
+static const G4bool includefrontplate = false;
 
 // Dual spectrometer
 
-static const G4bool includedualaxisspectrometer = false;
+static const G4bool includedualaxisspectrometer = true;
 
 static const G4double firstcrystalz_Dual = 180.0*cm;
-static const int Ncrystalsx_Dual = 10;
-static const int Ncrystalsy_Dual = 10;
-static const int Ncrystalsz_Dual = 20; //?
+static const G4double firstcrystalx_Dual = 3.25*mm; // this is to avoid placing a gap in the centre
+static const G4double firstcrystaly_Dual = 3.25*mm; // this is to avoid placing a gap in the centre
+static const int Ncrystalsx_Dual = 10; // how many crystals in x (this is for vertical facing crystals)
+static const int Ncrystalsy_Dual = 10; // how many crystals in y (this is for horizontal facing crystals)
+static const int Ncrystalsz_HDual = 35; // 70 layers in total, 35 each direction
+static const int Ncrystalsz_VDual = 35; // H means crystals are facing in x direction, V in vertical
 
 static const G4double crystalz_Dual = 5.0*mm;
 static const G4double crystaly_Dual = 5.0*mm;
-static const G4double crystalx_Dual = 50.0*mm;
-static const G4double crystalspacing_Dual = 5.0*mm;
-static const G4double crystalspacingz_Dual = 10.0*mm;
+static const G4double crystalx_Dual = 50.0*mm; // in vertical, x and y are simply interchanged
+static const G4double crystalspacing_Dual = 6.5*mm; // crystals are spaced by 1.5 mm, 1 mm is nylon divider
+static const G4double crystalspacingz_Dual = 6.0*mm; // crystal columns are spaced by 1 mm rubber
+
+static const G4bool includefrontplate_Dual = true; // 2 mm aluminium front plate
+static const G4bool includebackplate_Dual = true; // 32 mm aluminium
+static const G4double frontplatethickness_Dual = 2.0*mm;
+static const G4double backplatethickness_Dual = 32.0*mm;
+
+static const G4bool includedividers_Dual = true; //1 mm Nylon in transversal and 1 mm rubber in longitudinal direction
+static const G4bool includeframe_Dual = false; // outside aluminium frame
+
+static const G4double dividerthickness_TDual = 1.0*mm; // transversal divider (nylon)
+static const G4double dividerthickness_LDual = 0.99*mm; // longitudinal divider (rubber)
 
 // CsI profile stacks
 
 // Jena 45x45 (1 mm x 1 mm x 10 mm)
 
-static const G4bool includeprofilestack_Jena = true;
+static const G4bool includeprofilestack_Jena = false;
 static const int Ncrystalsx_Jena = 45;
 static const int Ncrystalsy_Jena = 45;
 static const G4double firstcrystalz_Jena = 160.0*cm;
@@ -49,10 +63,10 @@ static const G4double crystaly_Jena = 1.0*mm;
 static const G4double crystalz_Jena = 10.0*mm;
 static const G4double crystalspacing_Jena = 1.2*mm; // crystals are spaced by 0.2 mm thick layers of coating
 
-static const G4double coatingthickness_Jena = 0.2*mm;
+static const G4double coatingthickness_Jena = 0.19*mm;
 static const G4bool includecoating_Jena = false;
 
-static const G4double frontplatethickness_Jena = 0.5*mm; //TiO2 layer
+static const G4double frontplatethickness_Jena = 0.49*mm; //TiO2 layer
 static const G4bool includefrontplate_Jena = false;
 
 // DESY 30x30 (1.5 mm x 1.5 mm x 10 mm)
@@ -60,17 +74,17 @@ static const G4bool includefrontplate_Jena = false;
 static const G4bool includeprofilestack_DESY = false;
 static const int Ncrystalsx_DESY = 30;
 static const int Ncrystalsy_DESY = 30;
-static const G4double firstcrystalz_DESY = 160.0*cm;
+static const G4double firstcrystalz_DESY = 170.0*cm;
 
 static const G4double crystalx_DESY = 1.5*mm;
 static const G4double crystaly_DESY = 1.5*mm;
 static const G4double crystalz_DESY = 10.0*mm;
 static const G4double crystalspacing_DESY = 1.7*mm;
 
-static const G4double coatingthickness_DESY = 0.2*mm;// crystals are spaced by 0.2 mm thick layers of coating
+static const G4double coatingthickness_DESY = 0.19*mm;// crystals are spaced by 0.2 mm thick layers of coating
 static const G4bool includecoating_DESY = false;
 
-static const G4double frontplatethickness_DESY = 0.5*mm; //TiO2 layer
+static const G4double frontplatethickness_DESY = 0.49*mm; //TiO2 layer
 static const G4bool includefrontplate_DESY = false;
 
 // converters, windows etc.

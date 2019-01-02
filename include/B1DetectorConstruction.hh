@@ -24,7 +24,8 @@ class B1DetectorConstruction : public G4VUserDetectorConstruction
     G4VPhysicalVolume*  crystals[Ncrystalsy * Ncrystalsz]; // stack oriented in z, crystals long side in x
     G4VPhysicalVolume*  crystals_Jena[Ncrystalsx_Jena * Ncrystalsy_Jena]; // profile, so long side in z, rows in x and y
     G4VPhysicalVolume*  crystals_DESY[Ncrystalsx_DESY * Ncrystalsy_DESY];
-    G4VPhysicalVolume*  crystals_Dual[Ncrystalsx_Dual * Ncrystalsy_Dual * Ncrystalsz_Dual];
+    G4VPhysicalVolume*  crystals_HDual[Ncrystalsy_Dual * Ncrystalsz_HDual];
+    G4VPhysicalVolume*  crystals_VDual[Ncrystalsx_Dual * Ncrystalsz_VDual];
 
   protected:
     G4VPhysicalVolume*  fScoringVolume;
