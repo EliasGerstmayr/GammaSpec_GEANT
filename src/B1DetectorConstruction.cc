@@ -174,10 +174,16 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   G4VPhysicalVolume* physCrystal_DESY;
 
   // CsI crystals for 2 axis spectral stack (2018)
-  G4Box* solidCrystal_Dual = new G4Box("Crystal_Dual", 0.5*crystalx_Dual, 0.5*crystaly_Dual, 0.5*crystalz_Dual);
-  G4LogicalVolume* logicCrystal_Dual = new G4LogicalVolume(solidCrystal_Dual, CsI, "Crystal_Dual");
-  logicCrystal_Dual->SetVisAttributes(cyanColour);
-  G4VPhysicalVolume* physCrystal_Dual;
+  // Horizontal
+  G4Box* solidCrystal_HDual = new G4Box("Crystal_HDual", 0.5*crystalx_Dual, 0.5*crystaly_Dual, 0.5*crystalz_Dual);
+  G4LogicalVolume* logicCrystal_HDual = new G4LogicalVolume(solidCrystal_HDual, CsI, "Crystal_HDual");
+  logicCrystal_HDual->SetVisAttributes(cyanColour);
+  G4VPhysicalVolume* physCrystal_HDual;
+  //Vertical, x and y are interchanged
+  G4Box* solidCrystal_VDual = new G4Box("Crystal_VDual", 0.5*crystaly_Dual, 0.5*crystalx_Dual, 0.5*crystalz_Dual);
+  G4LogicalVolume* logicCrystal_VDual = new G4LogicalVolume(solidCrystal_VDual, CsI, "Crystal_VDual");
+  logicCrystal_VDual->SetVisAttributes(cyanColour);
+  G4VPhysicalVolume* physCrystal_VDual;
 
   // TiO2 coating horizontal and vertical layers for profile stacks
 
@@ -217,6 +223,24 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   G4LogicalVolume* logicVDivider = new G4LogicalVolume(solidVDivider, Aluminium, "VDivider");
   G4VPhysicalVolume* physVDivider;
 
+  // Dual axis stack - dividers and spacers
+  G4double totallengthy_Dual = (Ncrystalsy_Dual - 1)*crystalspacing_Dual + crystaly_Dual;
+  G4double totallengthx_Dual = totallengthy_Dual;
+
+  // Rubber spacers in longitudinal direction, for now use Polycarbonate
+  G4Box* solidLDivider_Dual = new G4Box("LDivider_Dual", 0.5*totallengthx_Dual, 0.5*totallengthy_Dual, 0.5*dividerthickness_LDual);
+  G4LogicalVolume* logicLDivider_Dual = new G4LogicalVolume(solidLDivider_Dual, Polycarbonate, "LDivider_Dual");
+  G4VPhysicalVolume* physLDivider_Dual;
+
+  // Nylon spacers in horizontal direction, for now use Polycarbonate
+  G4Box* solidHDivider_Dual = new G4Box("HDivider_Dual", 0.5*totallengthx_Dual, 0.5*dividerthickness_TDual, 0.5*crystalz_Dual);
+  G4LogicalVolume* logicHDivider_Dual = new G4LogicalVolume(solidHDivider_Dual, Polycarbonate, "HDivider_Dual");
+  G4VPhysicalVolume* physHDivider_Dual;
+
+  // Nylon spacers in horizontal direction, for now use Polycarbonate
+  G4Box* solidVDivider_Dual = new G4Box("VDivider_Dual", 0.5*dividerthickness_TDual, 0.5*totallengthy_Dual, 0.5*crystalz_Dual);
+  G4LogicalVolume* logicVDivider_Dual = new G4LogicalVolume(solidVDivider_Dual, Polycarbonate, "VDivider_Dual");
+  G4VPhysicalVolume* physVDivider_Dual;
 
   // Stainless steel front plate
   // simply change the material here in the code to see what the different front plate would do
@@ -241,6 +265,16 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   G4LogicalVolume* logicFrontPlate_DESY = new G4LogicalVolume(solidFrontPlate_DESY, TiO2, "Front Plate DESY");
   G4VPhysicalVolume* physFrontPlate_DESY;
 
+  // Dual axis stack plates
+  // Aluminium (2mm) front plate for Dual axis stack
+  G4Box* solidFrontPlate_Dual = new G4Box("Front plate Dual", 0.5*totallengthx_Dual, 0.5*totallengthy_Dual, 0.5*frontplatethickness_Dual);
+  G4LogicalVolume* logicFrontPlate_Dual = new G4LogicalVolume(solidFrontPlate_Dual, Aluminium, "Front Plate Dual");
+  G4VPhysicalVolume* physFrontPlate_Dual;
+
+  // Aluminium (32 mm) back plate for Dual axis stack
+  G4Box* solidBackPlate_Dual = new G4Box("Back plate Dual", 0.5*totallengthx_Dual, 0.5*totallengthy_Dual, 0.5*backplatethickness_Dual);
+  G4LogicalVolume* logicBackPlate_Dual = new G4LogicalVolume(solidBackPlate_Dual, Aluminium, "Back Plate Dual");
+  G4VPhysicalVolume* physBackPlate_Dual;
 
   // Kapton window
   G4Box* solidKaptonWindow = new G4Box("Kapton Window", 0.51*kaptonwidth, 0.51*kaptonwidth, 0.51*kaptonthickness);
@@ -537,54 +571,153 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 
   // RAL dual axis spectral stack (2018)
   // Stack is made up of 10 CsI crystals per layer
-  // Each crystal is 5x5 mm and 50 (?) mm deep
+  // Each crystal is 5x5 mm and 50 mm deep
   // spacing, coating, spacers
+  // each crystal is spaced by 1.5 mm, 1 mm nylon dividers
+  // each alternating set is spaced by 1mm and divided by 1 mm rubber
   if (includedualaxisspectrometer){
 
     // Place crystals facing one direction (sideways)
-    G4int crystalind_Dual = 0;
-    x = 0; //on-axis in x
-    for (int i = 0; i < Ncrystalsz_Dual; i++ ) {
+    G4int crystalind_HDual = 0;
+    x = firstcrystalx_Dual; //on-axis in x or offset if non-zero
+    for (int i = 0; i < Ncrystalsz_HDual; i++ ) {
       z = -(firstcrystalz_Dual + 2 * i * crystalspacingz_Dual);
       for (int j = 0; j < Ncrystalsy_Dual; j++) {
-        y = 0.5*((Ncrystalsy_Dual-1) * crystalspacing_Dual) - j * crystalspacing_Dual;
+        y = 0.5*((Ncrystalsy_Dual-1) * crystalspacing_Dual) - j * crystalspacing_Dual + firstcrystaly_Dual;
         pos = G4ThreeVector(x, y, z);
-        crystalind_Dual = i * Ncrystalsy_Dual + j;
-        physCrystal_Dual =   new G4PVPlacement(0,           // Rotation
+        crystalind_HDual = i * Ncrystalsy_Dual + j;
+        physCrystal_HDual =   new G4PVPlacement(0,           // Rotation
                                           pos,              // Position
-                                          logicCrystal_Dual,// Logical volume
-                                          "Crystal_Dual",   // Name
+                                          logicCrystal_HDual,// Logical volume
+                                          "Crystal_HDual",   // Name
                                           logicWorld,       // Mother  volume
                                           false,            // No boolean operation
-                                          crystalind_Dual,       // Copy number
+                                          crystalind_HDual,       // Copy number
                                           checkOverlaps);   // Overlaps checking
 
-        crystals_Dual[crystalind_Dual] = physCrystal_Dual;
+        crystals_HDual[crystalind_HDual] = physCrystal_HDual;
       }
     }
 
     // Place crystals facing the other direction (vertical)
-    /*G4int crystalindV_Dual = 0;
-    y = 0; //on-axis in y
-    for (int i = 0; i < NcrystalszV_Dual; i++ ) {
-      z = -(firstcrystalz_Dual + 2 * j * crystalspacingz_Dual + crystalspacingz_Dual); // first row vertical, then every second
+    G4int crystalind_VDual = 0;
+    y = firstcrystaly_Dual; //on-axis in y
+    for (int i = 0; i < Ncrystalsz_VDual; i++ ) {
+      z = -(firstcrystalz_Dual + 2 * i * crystalspacingz_Dual + crystalspacingz_Dual); // first row vertical, then every second
       for (int j = 0; j < Ncrystalsx_Dual; j++) {
-        x = 0.5*((Ncrystalsx_Dual-1) * crystalspacing_Dual) - i * crystalspacing_Dual;
+        x = 0.5*((Ncrystalsx_Dual-1) * crystalspacing_Dual) - j * crystalspacing_Dual + firstcrystalx_Dual;
         pos = G4ThreeVector(x, y, z);
-        crystalindV_Dual = i * Ncrystalsx_Dual + j;
-        physCrystal_Dual =   new G4PVPlacement(0,           // Rotation
+        crystalind_VDual = i * Ncrystalsx_Dual + j;
+        physCrystal_VDual =   new G4PVPlacement(0,           // Rotation
                                           pos,              // Position
-                                          logicCrystal_Dual,// Logical volume
-                                          "Crystal_Dual",   // Name
+                                          logicCrystal_VDual,// Logical volume
+                                          "Crystal_VDual",   // Name
                                           logicWorld,       // Mother  volume
                                           false,            // No boolean operation
-                                          crystalind_Dual,       // Copy number
+                                          crystalind_VDual,       // Copy number
                                           checkOverlaps);   // Overlaps checking
 
-        crystals_Dual[crystalind_Dual] = physCrystal_Dual;
+        crystals_VDual[crystalind_VDual] = physCrystal_VDual;
       }
-    }*/
+    }
 
+
+    // Place front plate
+    if (includefrontplate_Dual) {
+      x = firstcrystalx_Dual;
+      y = firstcrystaly_Dual;
+      z = -(firstcrystalz_Dual - 0.5*crystalz_Dual - 0.5*frontplatethickness_Dual - dividerthickness_LDual - 0.1*mm);
+      pos = G4ThreeVector(x, y, z);
+      physFrontPlate_Dual =   new G4PVPlacement(0,              // Rotation
+                                         pos,                   // Position
+                                         logicFrontPlate_Dual,  // Logical volume
+                                         "Front Plate Dual",    // Name
+                                         logicWorld,            // Mother  volume
+                                         false,                 // No boolean operation
+                                         0,                     // Copy number
+                                         checkOverlaps);        // Overlaps checking
+    }
+
+    // Place back plate
+    if (includebackplate_Dual) {
+      x = firstcrystalx_Dual;
+      y = firstcrystaly_Dual;
+      z = -(firstcrystalz_Dual + (Ncrystalsz_HDual + Ncrystalsz_VDual - 1) * crystalspacingz_Dual + 0.5 * crystalz_Dual + 0.5*backplatethickness_Dual + dividerthickness_LDual + 0.1*mm);
+      pos = G4ThreeVector(x, y, z);
+      physBackPlate_Dual =   new G4PVPlacement(0,              // Rotation
+                                         pos,                   // Position
+                                         logicBackPlate_Dual,  // Logical volume
+                                         "Back Plate Dual",    // Name
+                                         logicWorld,            // Mother  volume
+                                         false,                 // No boolean operation
+                                         0,                     // Copy number
+                                         checkOverlaps);        // Overlaps checking
+    }
+
+    // Include Dividers
+    if (includedividers_Dual) {
+
+      // longitudinal dividers (1 mm rubber)
+      // if the horizontal and vertical arrays are not filled up from back to front, this might not be true anymore
+      for (int j = 0; j < (Ncrystalsz_HDual+Ncrystalsz_VDual); j++ ) {
+        x = firstcrystalx_Dual;
+        y = firstcrystaly_Dual;
+        z = -(firstcrystalz - 0.5*crystalspacingz_Dual + j*crystalspacingz_Dual);
+        pos = G4ThreeVector(x, y, z);
+        physLDivider_Dual =   new G4PVPlacement(0,           // Rotation
+                                           pos,              // Position
+                                           logicLDivider_Dual,// Logical volume
+                                           "LDivider_Dual",  // Name
+                                           logicWorld,       // Mother  volume
+                                           false,            // No boolean operation
+                                           0,                // Copy number
+                                           checkOverlaps);   // Overlaps checking
+      }
+
+      // Place horizontal dividers for when crystals face horizontal direction
+      for (int j = 0; j < Ncrystalsz_HDual; j++){
+        z = -(firstcrystalz_Dual + j * 2 * crystalspacingz_Dual);
+
+        for (int i = 0; i < Ncrystalsy_Dual-1; i++ ) {
+              x = firstcrystalx_Dual;
+              y = 0.5*((Ncrystalsy_Dual-1) * crystalspacing_Dual) - (i + 0.5) * crystalspacing_Dual + firstcrystaly_Dual;
+
+              pos = G4ThreeVector(x, y, z);
+              physHDivider_Dual =   new G4PVPlacement(0,                // Rotation
+                                                 pos,              // Position
+                                                 logicHDivider_Dual,    // Logical volume
+                                                 "HDivider_Dual",       // Name
+                                                 logicWorld,       // Mother  volume
+                                                 false,            // No boolean operation
+                                                 0,                // Copy number
+                                                 checkOverlaps);   // Overlaps checking
+            }
+
+      }
+
+      // Place vertical dividers for when crystals face vertical direction
+      for (int j = 0; j < Ncrystalsz_VDual; j++){
+        z = -(firstcrystalz_Dual + (j + 0.5) * 2 * crystalspacingz_Dual);
+
+        for (int i = 0; i < Ncrystalsx_Dual-1; i++ ) {
+              y = firstcrystaly_Dual;
+              x = 0.5*((Ncrystalsx_Dual-1) * crystalspacing_Dual) - (i + 0.5) * crystalspacing_Dual + firstcrystalx_Dual;
+
+              pos = G4ThreeVector(x, y, z);
+              physVDivider_Dual =   new G4PVPlacement(0,                // Rotation
+                                                 pos,              // Position
+                                                 logicVDivider_Dual,    // Logical volume
+                                                 "VDivider_Dual",       // Name
+                                                 logicWorld,       // Mother  volume
+                                                 false,            // No boolean operation
+                                                 0,                // Copy number
+                                                 checkOverlaps);   // Overlaps checking
+            }
+
+      }
+
+
+    }
 
   }
 
