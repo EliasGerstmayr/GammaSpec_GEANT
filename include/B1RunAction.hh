@@ -59,6 +59,8 @@ class B1RunAction : public G4UserRunAction
     void AddEdep (G4double edep);
     void AddEdep_Jena (G4double edep_Jena);
     void AddEdep_DESY (G4double edep_DESY);
+    void AddEdep_HDual (G4double edep_HDual);
+    void AddEdep_VDual (G4double edep_VDual);
     double drawNorm() { return normrnd(); };
 
   private:
@@ -68,6 +70,10 @@ class B1RunAction : public G4UserRunAction
     G4Parameter<G4double> fEdep2_Jena;
     G4Parameter<G4double> fEdep_DESY;
     G4Parameter<G4double> fEdep2_DESY;
+    G4Parameter<G4double> fEdep_HDual;
+    G4Parameter<G4double> fEdep2_HDual;
+    G4Parameter<G4double> fEdep_VDual;
+    G4Parameter<G4double> fEdep2_VDual;
     HistoManager* histoManager;
 
     // Global random number generator
