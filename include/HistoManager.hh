@@ -43,6 +43,8 @@ class HistoManager
     TH2D*   csiHist;
     TH2D*   csiHist_Jena;
     TH2D*   csiHist_DESY;
+    TH2D*   csiHist_HDual;
+    TH2D*   csiHist_VDual;
     HistoMessenger* histoMessenger;
 
   private:
