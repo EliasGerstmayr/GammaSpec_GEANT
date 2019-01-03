@@ -85,14 +85,27 @@ void HistoManager::book()
 	// CsI crystal energies
 	// Bins like linspace(x0, x1, Nx) etc				 Nx          x0   x1               Ny           y0   y1
 	csiHist = new TH2D("CsIEnergy", "CsIEnergy", Ncrystalsy, -0.5, Ncrystalsy-0.5, Ncrystalsz ,-0.5, Ncrystalsz-0.5);
-	DataList->Add(csiHist);
+	if(includespectrometer){
+		DataList->Add(csiHist);
+}
 
 	csiHist_Jena = new TH2D("CsIEnergy_Jena", "CsIEnergy_Jena", Ncrystalsy_Jena, -0.5, Ncrystalsy_Jena-0.5, Ncrystalsx_Jena ,-0.5, Ncrystalsx_Jena-0.5);
-	DataList->Add(csiHist_Jena);
+	if(includeprofilestack_Jena){
+		DataList->Add(csiHist_Jena);
+}
 
 	csiHist_DESY = new TH2D("CsIEnergy_DESY", "CsIEnergy_DESY", Ncrystalsy_DESY, -0.5, Ncrystalsy_DESY-0.5, Ncrystalsx_DESY ,-0.5, Ncrystalsx_DESY-0.5);
-	DataList->Add(csiHist_DESY);
+	if(includeprofilestack_DESY){
+		DataList->Add(csiHist_DESY);
+}
 
+	csiHist_HDual = new TH2D("CsIEnergy_HDual", "CsIEnergy_HDual", Ncrystalsy_Dual, -0.5, Ncrystalsy_Dual-0.5, Ncrystalsz_HDual ,-0.5, Ncrystalsz_HDual-0.5);
+	csiHist_VDual = new TH2D("CsIEnergy_VDual", "CsIEnergy_VDual", Ncrystalsx_Dual, -0.5, Ncrystalsx_Dual-0.5, Ncrystalsz_VDual ,-0.5, Ncrystalsz_VDual-0.5);
+
+	if(includedualaxisspectrometer){
+		DataList->Add(csiHist_HDual)
+		DataList->Add(csiHist_VDual)
+	}
 	//Tracker data tree - gammas
 	trackergamma = new TTree("TrackerGamma","Tracker hit positions");
 	trackergamma->Branch("Tracker", &tracking,"x/D:y:z:px:py:pz:e");
