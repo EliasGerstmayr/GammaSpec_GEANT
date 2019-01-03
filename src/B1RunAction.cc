@@ -51,6 +51,10 @@ fEdep_Jena("Edep_Jena", 0.),
 fEdep2_Jena("Edep2_Jena", 0.),
 fEdep_DESY("Edep_DESY", 0.),
 fEdep2_DESY("Edep2_DESY", 0.),
+fEdep_HDual("Edep_HDual", 0.),
+fEdep2_HDual("Edep2_HDual", 0.),
+fEdep_VDual("Edep_VDual", 0.),
+fEdep2_VDual("Edep2_VDual", 0.),
 histoManager(histoManager)
 {
   // add new units for dose
@@ -73,6 +77,10 @@ histoManager(histoManager)
   parameterManager->RegisterParameter(fEdep2_Jena);
   parameterManager->RegisterParameter(fEdep_DESY);
   parameterManager->RegisterParameter(fEdep2_DESY);
+  parameterManager->RegisterParameter(fEdep_HDual);
+  parameterManager->RegisterParameter(fEdep2_HDual);
+  parameterManager->RegisterParameter(fEdep_VDual);
+  parameterManager->RegisterParameter(fEdep2_VDual);
 
   histoManager->book();
 
@@ -122,6 +130,12 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
   G4double edep_DESY  = fEdep_DESY.GetValue();
   G4double edep2_DESY = fEdep2_DESY.GetValue();
 
+  G4double edep_HDual  = fEdep_HDual.GetValue();
+  G4double edep2_HDual = fEdep2_HDual.GetValue();
+
+  G4double edep_VDual  = fEdep_VDual.GetValue();
+  G4double edep2_VDual = fEdep2_VDual.GetValue();
+
   G4double rms = edep2 - edep*edep/nofEvents;
   if (rms > 0.) rms = std::sqrt(rms); else rms = 0.;
 
@@ -130,6 +144,12 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
 
   G4double rms_DESY = edep2_DESY - edep_DESY*edep_DESY/nofEvents;
   if (rms_DESY > 0.) rms_DESY = std::sqrt(rms_DESY); else rms_DESY = 0.;
+
+  G4double rms_HDual = edep2_HDual - edep_HDual*edep_HDual/nofEvents;
+  if (rms_HDual > 0.) rms_HDual = std::sqrt(rms_HDual); else rms_HDual = 0.;
+
+  G4double rms_VDual = edep2_VDual - edep_VDual*edep_VDual/nofEvents;
+  if (rms_VDual > 0.) rms_VDual = std::sqrt(rms_VDual); else rms_VDual = 0.;
 
   const B1DetectorConstruction* detectorConstruction
    = static_cast<const B1DetectorConstruction*>
@@ -142,6 +162,12 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
 
   G4double dose_DESY = edep_DESY;
   G4double rmsDose_DESY = rms_DESY;
+
+  G4double dose_HDual = edep_HDual;
+  G4double rmsDose_HDual = rms_HDual;
+
+  G4double dose_VDual = edep_VDual;
+  G4double rmsDose_VDual = rms_VDual;
 
   // Run conditions
   //  note: There is no primary generator action object for "master"
@@ -176,6 +202,12 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
      << " Energy deposited in DESY crystals = "
      << G4BestUnit(dose_DESY,"Energy") << " +- " << G4BestUnit(rmsDose_DESY,"Energy")
      << G4endl
+     << " Energy deposited in horizontal Dual crystals = "
+     << G4BestUnit(dose_HDual,"Energy") << " +- " << G4BestUnit(rmsDose_HDual,"Energy")
+     << G4endl
+     << " Energy deposited in vertical Dual crystals = "
+     << G4BestUnit(dose_VDual,"Energy") << " +- " << G4BestUnit(rmsDose_VDual,"Energy")
+     << G4endl
      << "------------------------------------------------------------"
      << G4endl
      << G4endl;
@@ -203,5 +235,16 @@ void B1RunAction::AddEdep_DESY(G4double edep_DESY)
   fEdep2_DESY += edep_DESY*edep_DESY;
 }
 
+void B1RunAction::AddEdep_HDual(G4double edep_HDual)
+{
+  fEdep_HDual  += edep_HDual;
+  fEdep2_HDual += edep_HDual*edep_HDual;
+}
+
+void B1RunAction::AddEdep_VDual(G4double edep_VDual)
+{
+  fEdep_VDual  += edep_VDual;
+  fEdep2_VDual += edep_VDual*edep_VDual;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
