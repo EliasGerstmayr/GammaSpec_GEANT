@@ -136,7 +136,8 @@ void B1SteppingAction::UserSteppingAction(const G4Step* step)
     }
   }
 
-  // Get energy deposited in crystal
+  // Get energy deposited in crystal (record deposited energy by particles in crystal)
+  // crystals in the RAL 2015 stack
   if (step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetName() == "Crystal") {
     G4int crystalind = step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetCopyNo();
     G4int j = crystalind % Ncrystalsz;
@@ -146,7 +147,7 @@ void B1SteppingAction::UserSteppingAction(const G4Step* step)
     histoManager->FillHisto(histoManager->csiHist, i, j, edepStep);
     fEventAction->AddEdep(edepStep);
   }
-
+  // crystals in the Jena profile stack
   if (step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetName() == "Crystal_Jena") {
     G4int crystalind_Jena = step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetCopyNo();
     G4int j = crystalind_Jena % Ncrystalsx_Jena;
@@ -156,7 +157,7 @@ void B1SteppingAction::UserSteppingAction(const G4Step* step)
     histoManager->FillHisto(histoManager->csiHist_Jena, i, j, edepStep_Jena);
     fEventAction->AddEdep_Jena(edepStep_Jena);
   }
-
+  // crystals in the DESY profile stack
   if (step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetName() == "Crystal_DESY") {
     G4int crystalind_DESY = step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetCopyNo();
     G4int j = crystalind_DESY % Ncrystalsx_DESY;
@@ -165,6 +166,26 @@ void B1SteppingAction::UserSteppingAction(const G4Step* step)
     G4double edepStep_DESY = step->GetTotalEnergyDeposit();
     histoManager->FillHisto(histoManager->csiHist_DESY, i, j, edepStep_DESY);
     fEventAction->AddEdep_DESY(edepStep_DESY);
+  }
+  // horizontal facing crystals in the dual stack
+  if (step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetName() == "Crystal_HDual") {
+    G4int crystalind_HDual = step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetCopyNo();
+    G4int j = crystalind_HDual % Ncrystalsy_Dual;
+    G4float i = ((float)crystalind_HDual - (float)j)/(float)Ncrystalsy_Dual;
+    if (debug) G4cout << "Hit horizontal dual stack crystal " << crystalind_HDual << " = (" << i << ", " << j << ")" << G4endl;
+    G4double edepStep_HDual = step->GetTotalEnergyDeposit();
+    histoManager->FillHisto(histoManager->csiHist_HDual, i, j, edepStep_HDual);
+    fEventAction->AddEdep_HDual(edepStep_HDual);
+  }
+  // vertical facing crystals in the dual stack
+  if (step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetName() == "Crystal_VDual") {
+    G4int crystalind_VDual = step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetCopyNo();
+    G4int j = crystalind_VDual % Ncrystalsx_Dual;
+    G4float i = ((float)crystalind_VDual - (float)j)/(float)Ncrystalsx_Dual;
+    if (debug) G4cout << "Hit vertical dual stack crystal " << crystalind_VDual << " = (" << i << ", " << j << ")" << G4endl;
+    G4double edepStep_VDual = step->GetTotalEnergyDeposit();
+    histoManager->FillHisto(histoManager->csiHist_VDual, i, j, edepStep_VDual);
+    fEventAction->AddEdep_VDual(edepStep_VDual);
   }
 
 }
