@@ -103,8 +103,8 @@ void HistoManager::book()
 	csiHist_VDual = new TH2D("CsIEnergy_VDual", "CsIEnergy_VDual", Ncrystalsx_Dual, -0.5, Ncrystalsx_Dual-0.5, Ncrystalsz_VDual ,-0.5, Ncrystalsz_VDual-0.5);
 
 	if(includedualaxisspectrometer){
-		DataList->Add(csiHist_HDual)
-		DataList->Add(csiHist_VDual)
+		DataList->Add(csiHist_HDual);
+		DataList->Add(csiHist_VDual);
 	}
 	//Tracker data tree - gammas
 	trackergamma = new TTree("TrackerGamma","Tracker hit positions");
