@@ -174,7 +174,7 @@ void B1SteppingAction::UserSteppingAction(const G4Step* step)
     G4float i = ((float)crystalind_HDual - (float)j)/(float)Ncrystalsy_Dual;
     if (debug) G4cout << "Hit horizontal dual stack crystal " << crystalind_HDual << " = (" << i << ", " << j << ")" << G4endl;
     G4double edepStep_HDual = step->GetTotalEnergyDeposit();
-    histoManager->FillHisto(histoManager->csiHist_HDual, i, j, edepStep_HDual);
+    histoManager->FillHisto(histoManager->csiHist_HDual, j, i, edepStep_HDual);
     fEventAction->AddEdep_HDual(edepStep_HDual);
   }
   // vertical facing crystals in the dual stack
@@ -184,7 +184,7 @@ void B1SteppingAction::UserSteppingAction(const G4Step* step)
     G4float i = ((float)crystalind_VDual - (float)j)/(float)Ncrystalsx_Dual;
     if (debug) G4cout << "Hit vertical dual stack crystal " << crystalind_VDual << " = (" << i << ", " << j << ")" << G4endl;
     G4double edepStep_VDual = step->GetTotalEnergyDeposit();
-    histoManager->FillHisto(histoManager->csiHist_VDual, i, j, edepStep_VDual);
+    histoManager->FillHisto(histoManager->csiHist_VDual, j, i, edepStep_VDual);
     fEventAction->AddEdep_VDual(edepStep_VDual);
   }
 
