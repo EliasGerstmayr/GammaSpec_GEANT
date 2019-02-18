@@ -99,8 +99,8 @@ void HistoManager::book()
 		DataList->Add(csiHist_DESY);
 }
 
-	csiHist_HDual = new TH2D("CsIEnergy_HDual", "CsIEnergy_HDual", Ncrystalsz_HDual, -0.5, Ncrystalsz_HDual-0.5, Ncrystalsy_Dual ,-0.5, Ncrystalsy_Dual-0.5);
-	csiHist_VDual = new TH2D("CsIEnergy_VDual", "CsIEnergy_VDual", Ncrystalsz_VDual, -0.5, Ncrystalsz_VDual-0.5, Ncrystalsx_Dual ,-0.5, Ncrystalsx_Dual-0.5);
+	csiHist_HDual = new TH2D("CsIEnergy_HDual", "CsIEnergy_HDual", Ncrystalsy_Dual, -0.5, Ncrystalsy_Dual-0.5, Ncrystalsz_HDual ,-0.5, Ncrystalsz_HDual-0.5);
+	csiHist_VDual = new TH2D("CsIEnergy_VDual", "CsIEnergy_VDual", Ncrystalsx_Dual, -0.5, Ncrystalsx_Dual-0.5, Ncrystalsz_VDual ,-0.5, Ncrystalsz_VDual-0.5);
 
 	if(includedualaxisspectrometer){
 		DataList->Add(csiHist_HDual);
