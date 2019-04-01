@@ -18,6 +18,7 @@ class B1EventAction : public G4UserEventAction
 
     void AddEdep(G4double edep) { fEdep += edep; }
     void AddEdep_Jena(G4double edep_Jena) { fEdep_Jena += edep_Jena; }
+    void AddEdep_QUB(G4double edep_QUB) { fEdep_QUB += edep_QUB; }
     void AddEdep_DESY(G4double edep_DESY) { fEdep_DESY += edep_DESY; }
     void AddEdep_HDual(G4double edep_HDual) { fEdep_HDual += edep_HDual; }
     void AddEdep_VDual(G4double edep_VDual) { fEdep_VDual += edep_VDual; }
@@ -29,6 +30,7 @@ class B1EventAction : public G4UserEventAction
     B1RunAction* fRunAction;
     G4double     fEdep;
     G4double     fEdep_Jena;
+    G4double     fEdep_QUB;
     G4double     fEdep_DESY;
     G4double     fEdep_HDual;
     G4double     fEdep_VDual;

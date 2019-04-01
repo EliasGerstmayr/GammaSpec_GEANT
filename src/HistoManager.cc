@@ -94,6 +94,11 @@ void HistoManager::book()
 		DataList->Add(csiHist_Jena);
 }
 
+csiHist_QUB = new TH2D("CsIEnergy_QUB", "CsIEnergy_QUB", Ncrystalsy_QUB, -0.5, Ncrystalsy_QUB-0.5, Ncrystalsx_QUB ,-0.5, Ncrystalsx_QUB-0.5);
+if(includeprofilestack_QUB){
+	DataList->Add(csiHist_QUB);
+}
+
 	csiHist_DESY = new TH2D("CsIEnergy_DESY", "CsIEnergy_DESY", Ncrystalsy_DESY, -0.5, Ncrystalsy_DESY-0.5, Ncrystalsx_DESY ,-0.5, Ncrystalsx_DESY-0.5);
 	if(includeprofilestack_DESY){
 		DataList->Add(csiHist_DESY);

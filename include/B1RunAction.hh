@@ -58,6 +58,7 @@ class B1RunAction : public G4UserRunAction
     virtual void   EndOfRunAction(const G4Run*);
     void AddEdep (G4double edep);
     void AddEdep_Jena (G4double edep_Jena);
+    void AddEdep_QUB (G4double edep_QUB);
     void AddEdep_DESY (G4double edep_DESY);
     void AddEdep_HDual (G4double edep_HDual);
     void AddEdep_VDual (G4double edep_VDual);
@@ -68,6 +69,8 @@ class B1RunAction : public G4UserRunAction
     G4Parameter<G4double> fEdep2;
     G4Parameter<G4double> fEdep_Jena;
     G4Parameter<G4double> fEdep2_Jena;
+    G4Parameter<G4double> fEdep_QUB;
+    G4Parameter<G4double> fEdep2_QUB;
     G4Parameter<G4double> fEdep_DESY;
     G4Parameter<G4double> fEdep2_DESY;
     G4Parameter<G4double> fEdep_HDual;

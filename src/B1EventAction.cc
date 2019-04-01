@@ -41,6 +41,7 @@ B1EventAction::B1EventAction(B1RunAction* runAction)
   fRunAction(runAction),
   fEdep(0.),
   fEdep_Jena(0.),
+  fEdep_QUB(0.),
   fEdep_DESY(0.),
   fEdep_HDual(0.),
   fEdep_VDual(0.)
@@ -57,6 +58,7 @@ void B1EventAction::BeginOfEventAction(const G4Event*)
 {
   fEdep = 0.;
   fEdep_Jena = 0.;
+  fEdep_QUB = 0.;
   fEdep_DESY = 0.;
   fEdep_HDual = 0.;
   fEdep_VDual = 0.;
@@ -70,6 +72,7 @@ void B1EventAction::EndOfEventAction(const G4Event*)
   // accumulate statistics in run action
   fRunAction->AddEdep(fEdep);
   fRunAction->AddEdep_Jena(fEdep_Jena);
+  fRunAction->AddEdep_QUB(fEdep_QUB);
   fRunAction->AddEdep_DESY(fEdep_DESY);
   fRunAction->AddEdep_HDual(fEdep_HDual);
   fRunAction->AddEdep_VDual(fEdep_VDual);

@@ -42,6 +42,7 @@ class HistoManager
     TH1D*   gunEnHist;
     TH2D*   csiHist;
     TH2D*   csiHist_Jena;
+    TH2D*   csiHist_QUB;
     TH2D*   csiHist_DESY;
     TH2D*   csiHist_HDual;
     TH2D*   csiHist_VDual;

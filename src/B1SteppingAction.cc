@@ -157,6 +157,16 @@ void B1SteppingAction::UserSteppingAction(const G4Step* step)
     histoManager->FillHisto(histoManager->csiHist_Jena, i, j, edepStep_Jena);
     fEventAction->AddEdep_Jena(edepStep_Jena);
   }
+  // crystals in the QUB profile stack
+  if (step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetName() == "Crystal_QUB") {
+    G4int crystalind_QUB = step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetCopyNo();
+    G4int j = crystalind_QUB % Ncrystalsx_QUB;
+    G4float i = ((float)crystalind_QUB - (float)j)/(float)Ncrystalsx_QUB;
+    if (debug) G4cout << "Hit QUB profile crystal " << crystalind_QUB << " = (" << i << ", " << j << ")" << G4endl;
+    G4double edepStep_QUB = step->GetTotalEnergyDeposit();
+    histoManager->FillHisto(histoManager->csiHist_QUB, i, j, edepStep_QUB);
+    fEventAction->AddEdep_Jena(edepStep_QUB);
+  }
   // crystals in the DESY profile stack
   if (step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetName() == "Crystal_DESY") {
     G4int crystalind_DESY = step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetCopyNo();

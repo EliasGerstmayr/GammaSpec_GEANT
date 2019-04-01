@@ -49,6 +49,8 @@ fEdep("Edep", 0.),
 fEdep2("Edep2", 0.),
 fEdep_Jena("Edep_Jena", 0.),
 fEdep2_Jena("Edep2_Jena", 0.),
+fEdep_QUB("Edep_QUB", 0.),
+fEdep2_QUB("Edep2_QUB", 0.),
 fEdep_DESY("Edep_DESY", 0.),
 fEdep2_DESY("Edep2_DESY", 0.),
 fEdep_HDual("Edep_HDual", 0.),
@@ -75,6 +77,8 @@ histoManager(histoManager)
   parameterManager->RegisterParameter(fEdep2);
   parameterManager->RegisterParameter(fEdep_Jena);
   parameterManager->RegisterParameter(fEdep2_Jena);
+  parameterManager->RegisterParameter(fEdep_QUB);
+  parameterManager->RegisterParameter(fEdep2_QUB);
   parameterManager->RegisterParameter(fEdep_DESY);
   parameterManager->RegisterParameter(fEdep2_DESY);
   parameterManager->RegisterParameter(fEdep_HDual);
@@ -127,6 +131,9 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
   G4double edep_Jena  = fEdep_Jena.GetValue();
   G4double edep2_Jena = fEdep2_Jena.GetValue();
 
+  G4double edep_QUB  = fEdep_QUB.GetValue();
+  G4double edep2_QUB = fEdep2_QUB.GetValue();
+
   G4double edep_DESY  = fEdep_DESY.GetValue();
   G4double edep2_DESY = fEdep2_DESY.GetValue();
 
@@ -141,6 +148,9 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
 
   G4double rms_Jena = edep2_Jena - edep_Jena*edep_Jena/nofEvents;
   if (rms_Jena > 0.) rms_Jena = std::sqrt(rms_Jena); else rms_Jena = 0.;
+
+  G4double rms_QUB = edep2_QUB - edep_QUB*edep_QUB/nofEvents;
+  if (rms_QUB > 0.) rms_QUB = std::sqrt(rms_QUB); else rms_QUB = 0.;
 
   G4double rms_DESY = edep2_DESY - edep_DESY*edep_DESY/nofEvents;
   if (rms_DESY > 0.) rms_DESY = std::sqrt(rms_DESY); else rms_DESY = 0.;
@@ -159,6 +169,9 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
 
   G4double dose_Jena = edep_Jena;
   G4double rmsDose_Jena = rms_Jena;
+
+  G4double dose_QUB = edep_QUB;
+  G4double rmsDose_QUB = rms_QUB;
 
   G4double dose_DESY = edep_DESY;
   G4double rmsDose_DESY = rms_DESY;
@@ -199,6 +212,9 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
      << " Energy deposited in Jena crystals = "
      << G4BestUnit(dose_Jena,"Energy") << " +- " << G4BestUnit(rmsDose_Jena,"Energy")
      << G4endl
+     << " Energy deposited in QUB crystals = "
+     << G4BestUnit(dose_QUB,"Energy") << " +- " << G4BestUnit(rmsDose_QUB,"Energy")
+     << G4endl
      << " Energy deposited in DESY crystals = "
      << G4BestUnit(dose_DESY,"Energy") << " +- " << G4BestUnit(rmsDose_DESY,"Energy")
      << G4endl
@@ -216,6 +232,7 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+// could in the future merge all these functions to one?
 
 void B1RunAction::AddEdep(G4double edep)
 {
@@ -227,6 +244,12 @@ void B1RunAction::AddEdep_Jena(G4double edep_Jena)
 {
   fEdep_Jena  += edep_Jena;
   fEdep2_Jena += edep_Jena*edep_Jena;
+}
+
+void B1RunAction::AddEdep_QUB(G4double edep_QUB)
+{
+  fEdep_QUB  += edep_QUB;
+  fEdep2_QUB += edep_QUB*edep_QUB;
 }
 
 void B1RunAction::AddEdep_DESY(G4double edep_DESY)
