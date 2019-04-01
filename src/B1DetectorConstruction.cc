@@ -173,6 +173,13 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   logicCrystal_DESY->SetVisAttributes(cyanColour);
   G4VPhysicalVolume* physCrystal_DESY;
 
+  // CsI crystals for QUB profile stack (2018 and earlier)
+  G4Box* solidCrystal_QUB = new G4Box("Crystal_QUB", 0.5*crystalx_QUB, 0.5*crystaly_QUB, 0.5*crystalz_QUB);
+  G4LogicalVolume* logicCrystal_QUB = new G4LogicalVolume(solidCrystal_QUB, CsI, "Crystal_QUB");
+  logicCrystal_QUB->SetVisAttributes(cyanColour);
+  G4VPhysicalVolume* physCrystal_QUB;
+
+
   // CsI crystals for 2 axis spectral stack (2018)
   // Horizontal
   G4Box* solidCrystal_HDual = new G4Box("Crystal_HDual", 0.5*crystalx_Dual, 0.5*crystaly_Dual, 0.5*crystalz_Dual);
@@ -210,6 +217,18 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   G4Box* solidVCoating_DESY = new G4Box("VCoating_DESY", 0.5*coatingthickness_DESY, 0.5*totallengthy_DESY, 0.5*crystalz_DESY);
   G4LogicalVolume* logicVCoating_DESY = new G4LogicalVolume(solidVCoating_DESY, TiO2, "VCoating_DESY");
   G4VPhysicalVolume* physVCoating_DESY;
+
+  // QUB
+  G4double totallengthx_QUB = (Ncrystalsx_QUB - 1)*crystalspacing_QUB + crystalx_QUB;
+  G4double totallengthy_QUB = (Ncrystalsy_QUB - 1)*crystalspacing_QUB + crystaly_QUB;
+  // horizontal coating
+  G4Box* solidHCoating_QUB = new G4Box("HCoating_QUB", 0.5*totallengthx_QUB, 0.5*coatingthickness_QUB, 0.5*crystalz_QUB);
+  G4LogicalVolume* logicHCoating_QUB = new G4LogicalVolume(solidHCoating_QUB, Aluminium, "HCoating_QUB");
+  G4VPhysicalVolume* physHCoating_QUB;
+  // vertical coating
+  G4Box* solidVCoating_QUB = new G4Box("VCoating_DESY", 0.5*coatingthickness_QUB, 0.5*totallengthy_QUB, 0.5*crystalz_QUB);
+  G4LogicalVolume* logicVCoating_QUB = new G4LogicalVolume(solidVCoating_QUB, Aluminium, "VCoating_QUB");
+  G4VPhysicalVolume* physVCoating_QUB;
 
 
   // Aluminium dividers, horizontal and vertical for RAL stack (2015)
@@ -264,6 +283,10 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   G4Box* solidFrontPlate_DESY = new G4Box("Front plate DESY", 0.5*totallengthx_DESY, 0.5*totallengthy_DESY, 0.5*frontplatethickness_DESY);
   G4LogicalVolume* logicFrontPlate_DESY = new G4LogicalVolume(solidFrontPlate_DESY, TiO2, "Front Plate DESY");
   G4VPhysicalVolume* physFrontPlate_DESY;
+  //QUB
+  G4Box* solidFrontPlate_QUB = new G4Box("Front plate QUB", 0.5*totallengthx_QUB, 0.5*totallengthy_QUB, 0.5*frontplatethickness_QUB);
+  G4LogicalVolume* logicFrontPlate_QUB = new G4LogicalVolume(solidFrontPlate_QUB, Aluminium, "Front Plate QUB");
+  G4VPhysicalVolume* physFrontPlate_QUB;
 
   // Dual axis stack plates
   // Aluminium (2mm) front plate for Dual axis stack
@@ -285,6 +308,16 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   G4Box* solidAluminiumFoil = new G4Box("Aluminium Foil", 0.51*aluminiumwidth, 0.51*aluminiumwidth, 0.51*alumniniumthickness);
   G4LogicalVolume* logicAluminiumFoil = new G4LogicalVolume(solidAluminiumFoil, Aluminium, "Aluminium Foil");
   G4VPhysicalVolume* physAluminiumFoil;
+
+  // Plastic converter
+  G4Box* solidPlasticConverter = new G4Box("Plastic Converter", 0.5*plasticconverterwidth, 0.5*plasticconverterwidth, 0.5*plasticconverterthickness);
+  G4LogicalVolume* logicPlasticConverter = new G4LogicalVolume(solidPlasticConverter, Polycarbonate, "Plastic Converter");
+  G4VPhysicalVolume* physPlasticConverter;
+
+  // Iron converter
+  G4Box* solidIronConverter = new G4Box("Iron Converter", 0.5*ironconverterwidth, 0.5*ironconverterwidth, 0.5*ironconverterthickness);
+  G4LogicalVolume* logicIronConverter = new G4LogicalVolume(solidIronConverter, Iron, "Iron Converter");
+  G4VPhysicalVolume* physIronConverter;
 
   // Lead shielding
   G4Box* solidLeadShield = new G4Box("Lead Shield No Hole", 30*cm, 30*cm, 7.5*cm);
@@ -569,6 +602,96 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 
   }
 
+
+
+
+  // QUB CsI stack (2018 and earlier)
+  // Stack is made up of 20 x 20 CsI crystals
+  // Each crystal is 2x2 mm and 20 mm deep
+  // Each pair of crystals and the outside is rolled in two layers of Al foil 0.1 mm
+  // a 10 mm aluminium plate is in the front
+  if(includeprofilestack_QUB){
+
+    // Place crystals
+    G4int crystalind_QUB = 0;
+    for (int i = 0; i < Ncrystalsy_QUB; i++ ) {
+      // this centres our stack in y direction onto the laser axis
+      y = 0.5*((Ncrystalsy_QUB-1) * crystalspacing_QUB) - i * crystalspacing_QUB;
+
+      for (int j = 0; j < Ncrystalsx_QUB; j++) {
+        // this centres our stack in x direction onto the laser axis
+        x = 0.5*((Ncrystalsx_QUB-1) * crystalspacing_QUB) - j * crystalspacing_QUB;
+        z = -(firstcrystalz_QUB);
+        pos = G4ThreeVector(x, y, z);
+        crystalind_QUB = i * Ncrystalsx_QUB + j;
+        physCrystal_QUB =   new G4PVPlacement(0,            // Rotation
+                                          pos,              // Position
+                                          logicCrystal_QUB,// Logical volume
+                                          "Crystal_QUB",   // Name
+                                          logicWorld,       // Mother  volume
+                                          false,            // No boolean operation
+                                          crystalind_QUB,  // Copy number
+                                          checkOverlaps);   // Overlaps checking
+
+        crystals_QUB[crystalind_QUB] = physCrystal_QUB;
+      }
+    }
+
+    // Place coatings
+    if (includecoating_QUB) {
+      // Place horizontal coatings
+      for (int i = 0; i < Ncrystalsy_QUB+1; i++ ) {
+        x = 0;
+        y = 0.5*((Ncrystalsy_QUB+1) * crystalspacing_QUB) - (i + 0.5) * crystalspacing_QUB;
+        z = -firstcrystalz_QUB;
+        pos = G4ThreeVector(x, y, z);
+        physHCoating_QUB =   new G4PVPlacement(0,            // Rotation
+                                           pos,               // Position
+                                           logicHCoating_QUB,// Logical volume
+                                           "HCoating_QUB",  // Name
+                                           logicWorld,       // Mother  volume
+                                           false,            // No boolean operation
+                                           0,                // Copy number
+                                           checkOverlaps);   // Overlaps checking
+      }
+
+      // Place vertical dividers
+      for (int j = 0; j < Ncrystalsx_QUB+1; j++ ) {
+        x = 0.5*((Ncrystalsx_QUB+1) * crystalspacing_QUB) - (j + 0.5) * crystalspacing_QUB;
+        y = 0;
+        z = -firstcrystalz_QUB;
+        pos = G4ThreeVector(x, y, z);
+        physVCoating_QUB =   new G4PVPlacement(0,                // Rotation
+                                           pos,                   // Position
+                                           logicVCoating_QUB,    // Logical volume
+                                           "VCoating_QUB",       // Name
+                                           logicWorld,            // Mother  volume
+                                           false,                  // No boolean operation
+                                           0,                      // Copy number
+                                           checkOverlaps);         // Overlaps checking
+      }
+    }
+
+    // Place front plate
+    if (includefrontplate_QUB) {
+      x = 0;
+      y = 0;
+      z = -(firstcrystalz_QUB - 0.5*crystalz_QUB - 0.5*frontplatethickness_QUB - 0.1*mm);
+      pos = G4ThreeVector(x, y, z);
+      physFrontPlate_QUB =   new G4PVPlacement(0,              // Rotation
+                                         pos,                   // Position
+                                         logicFrontPlate_QUB,  // Logical volume
+                                         "Front Plate QUB",    // Name
+                                         logicWorld,            // Mother  volume
+                                         false,                 // No boolean operation
+                                         0,                     // Copy number
+                                         checkOverlaps);        // Overlaps checking
+    }
+
+
+
+  }
+
   // RAL dual axis spectral stack (2018)
   // Stack is made up of 10 CsI crystals per layer
   // Each crystal is 5x5 mm and 50 mm deep
@@ -754,6 +877,37 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
                                          checkOverlaps);      // Overlaps checking
   }
 
+  // Place plastic converter foil
+  if (includeplasticconverter) {
+    x = 0;
+    y = 0;
+    z = -zposition_plasticconverter;
+    pos = G4ThreeVector(x, y, z);
+    physPlasticConverter =   new G4PVPlacement(0,                   // Rotation
+                                         pos,                 // Position
+                                         logicPlasticConverter,  // Logical volume
+                                         "Plastic Converter",    // Name
+                                         logicWorld,          // Mother  volume
+                                         false,               // No boolean operation
+                                         0,                   // Copy number
+                                         checkOverlaps);      // Overlaps checking
+  }
+
+  // Place Iron converter foil
+  if (includeironconverter) {
+    x = 0;
+    y = 0;
+    z = -zposition_ironconverter;
+    pos = G4ThreeVector(x, y, z);
+    physIronConverter =   new G4PVPlacement(0,                   // Rotation
+                                         pos,                 // Position
+                                         logicIronConverter,  // Logical volume
+                                         "Iron Converter",    // Name
+                                         logicWorld,          // Mother  volume
+                                         false,               // No boolean operation
+                                         0,                   // Copy number
+                                         checkOverlaps);      // Overlaps checking
+  }
 
   // Gemini breadboard
   if (includebreadboard) {

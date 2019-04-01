@@ -3,8 +3,8 @@
 // CsI spectrometer
 
 // RAL Stack (2015)
-static const G4bool includespectrometer = false;
-static const int Ncrystalsz = 33;
+static const G4bool includespectrometer = true;
+static const int Ncrystalsz = 45;
 static const int Ncrystalsy = 21;
 static const G4double firstcrystalz = 180.0*cm;
 
@@ -14,15 +14,15 @@ static const G4double crystalx = 50.0*mm;
 static const G4double crystalspacing = 5.0*mm;
 
 static const G4double dividerthickness = 0.49*mm;
-static const G4bool includeDividers = false;
+static const G4bool includeDividers = true;
 
 static const G4double frontplatethickness = 10.0*mm;
-static const G4bool includeplasticfrontplate = false; //if true replaces steel frontplate with plastic
-static const G4bool includefrontplate = false;
+static const G4bool includeplasticfrontplate = true; //if true replaces steel frontplate with plastic
+static const G4bool includefrontplate = true;
 
 // Dual spectrometer
 
-static const G4bool includedualaxisspectrometer = true;
+static const G4bool includedualaxisspectrometer = false;
 
 static const G4double firstcrystalz_Dual = 180.0*cm;
 static const G4double firstcrystalx_Dual = 3.25*mm; // this is to avoid placing a gap in the centre
@@ -38,12 +38,12 @@ static const G4double crystalx_Dual = 50.0*mm; // in vertical, x and y are simpl
 static const G4double crystalspacing_Dual = 6.5*mm; // crystals are spaced by 1.5 mm, 1 mm is nylon divider
 static const G4double crystalspacingz_Dual = 6.0*mm; // crystal columns are spaced by 1 mm rubber
 
-static const G4bool includefrontplate_Dual = true; // 2 mm aluminium front plate
-static const G4bool includebackplate_Dual = true; // 32 mm aluminium
+static const G4bool includefrontplate_Dual = false; // 2 mm aluminium front plate
+static const G4bool includebackplate_Dual = false; // 32 mm aluminium
 static const G4double frontplatethickness_Dual = 2.0*mm;
 static const G4double backplatethickness_Dual = 32.0*mm;
 
-static const G4bool includedividers_Dual = true; //1 mm Nylon in transversal and 1 mm rubber in longitudinal direction
+static const G4bool includedividers_Dual = false; //1 mm Nylon in transversal and 1 mm rubber in longitudinal direction
 static const G4bool includeframe_Dual = false; // outside aluminium frame
 
 static const G4double dividerthickness_TDual = 1.0*mm; // transversal divider (nylon)
@@ -87,10 +87,41 @@ static const G4bool includecoating_DESY = false;
 static const G4double frontplatethickness_DESY = 0.49*mm; //TiO2 layer
 static const G4bool includefrontplate_DESY = false;
 
+
+// QUB 20x20 (2 mm x 2 mm x 20 mm)
+
+static const G4bool includeprofilestack_QUB = true;
+static const int Ncrystalsx_QUB = 20;
+static const int Ncrystalsy_QUB = 20;
+static const G4double firstcrystalz_QUB = 170.0*cm;
+
+static const G4double crystalx_QUB = 2.0*mm;
+static const G4double crystaly_QUB = 2.0*mm;
+static const G4double crystalz_QUB = 20.0*mm;
+static const G4double crystalspacing_QUB = 2.1*mm;
+
+static const G4double coatingthickness_QUB = 0.09*mm;// crystals are spaced by 0.1 mm thick layers of aluminium foil
+static const G4bool includecoating_QUB = true;
+
+static const G4double frontplatethickness_QUB = 10.00*mm; //Aluminium frame
+static const G4bool includefrontplate_QUB = true;
+
+/////////////////////////////////////////////////////////////////
 // converters, windows etc.
 
 static const G4double converterthickness = 5.0*mm;
 static const G4bool includeconverter = false;
+
+static const G4double plasticconverterthickness = 1.6*mm;
+static const G4double plasticconverterwidth = 10.0*mm;
+static const G4bool includeplasticconverter = false;
+static const G4double zposition_plasticconverter = 80.0*cm;
+
+static const G4double ironconverterthickness = 2.0*mm;
+static const G4double ironconverterwidth = 10.0*mm;
+static const G4bool includeironconverter = false;
+static const G4double zposition_ironconverter = 80.0*cm;
+
 
 static const G4double kaptonthickness = 0.1*mm;
 static const G4double kaptonwidth = 100.*mm;
