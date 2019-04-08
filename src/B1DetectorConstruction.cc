@@ -80,6 +80,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   G4Element* Nd  = nist->FindOrBuildElement(60);
   G4Element* B  = nist->FindOrBuildElement(5);
   G4Element* Ti = nist->FindOrBuildElement("Ti");
+  G4Element* Bi = nist->FindOrBuildElement("Bi");
 
   //                                        Density  # components
   G4Material* Lead = new G4Material("Lead", 11.35*g/cm3, 1);
@@ -100,6 +101,9 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 
   G4Material* Aluminium = new G4Material("Aluminium", 2.7*g/cm3, 1);
   Aluminium->AddElement(Al, 1);
+
+  G4Material* Bismuth = new G4Material("Bismuth", 9.78*g/cm3, 1);
+  Bismuth->AddElement(Bi, 1);
 
   G4Material* SS316 = new G4Material("Stainless Steel 316", 8.06*g/cm3, 6);
   SS316->AddElement(C,  0.001);
@@ -318,6 +322,11 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   G4Box* solidIronConverter = new G4Box("Iron Converter", 0.5*ironconverterwidth, 0.5*ironconverterwidth, 0.5*ironconverterthickness);
   G4LogicalVolume* logicIronConverter = new G4LogicalVolume(solidIronConverter, Iron, "Iron Converter");
   G4VPhysicalVolume* physIronConverter;
+
+  // Bismuth converter
+  G4Box* solidBismuthConverter = new G4Box("Bismuth Converter", 0.5*bismuthconverterwidth, 0.5*bismuthconverterwidth, 0.5*bismuthconverterthickness);
+  G4LogicalVolume* logicBismuthConverter = new G4LogicalVolume(solidBismuthConverter, Bismuth, "Bismuth Converter");
+  G4VPhysicalVolume* physBismuthConverter;
 
   // Lead shielding
   G4Box* solidLeadShield = new G4Box("Lead Shield No Hole", 30*cm, 30*cm, 7.5*cm);
@@ -909,6 +918,22 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
                                          checkOverlaps);      // Overlaps checking
   }
 
+  // Place Bismuth converter foil
+  if (includebismuthconverter) {
+    x = 0;
+    y = 0;
+    z = -zposition_bismuthconverter;
+    pos = G4ThreeVector(x, y, z);
+    physBismuthConverter =   new G4PVPlacement(0,                   // Rotation
+                                         pos,                 // Position
+                                         logicBismuthConverter,  // Logical volume
+                                         "Bismuth Converter",    // Name
+                                         logicWorld,          // Mother  volume
+                                         false,               // No boolean operation
+                                         0,                   // Copy number
+                                         checkOverlaps);      // Overlaps checking
+  }
+
   // Gemini breadboard
   if (includebreadboard) {
     G4Box* solidBreadboard = new G4Box("Breadboard", 661.5*mm, 51.5*mm, 1.299*m);
@@ -1142,33 +1167,35 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
                                 checkOverlaps);
 
    // f/2 parabola
-   const G4int Nz = 20; // Number of points
-   G4double rmax = 350; // Max outer radius of parent parabola in mm
-   G4double router[Nz+1];
-   G4double rinner[Nz+1];
-   G4double zplanes[Nz+1];
-   for (int i = 0; i < Nz+1; i++){
-     router[i] = double(i)/double(Nz-1) * rmax; // Still in mm
-     zplanes[i] = (1/(300*std::sqrt(3)))*router[i]*router[i]; // Still in mm
-     rinner[i] = 0;
-     router[i] = router[i] * mm;
-     zplanes[i] = zplanes[i] * mm;
-   }
+   if(includeparabola){
 
-   router[Nz-1] = router[Nz-2];
-   zplanes[Nz-1] = -5*cm;
-   G4Polycone* f2parent = new G4Polycone("f2parent",0*deg,360*deg,Nz,zplanes,rinner,router);
-   G4Tubs* f2daughter = new G4Tubs("f2daughter", 0, 10*cm, 100*cm, 0*deg, 360*deg);
-   G4Tubs* f2hole = new G4Tubs("f2hole", 0, 1*cm, 100*cm, 0*deg, 360*deg);
+       const G4int Nz = 20; // Number of points
+       G4double rmax = 350; // Max outer radius of parent parabola in mm
+       G4double router[Nz+1];
+       G4double rinner[Nz+1];
+       G4double zplanes[Nz+1];
+       for (int i = 0; i < Nz+1; i++){
+         router[i] = double(i)/double(Nz-1) * rmax; // Still in mm
+         zplanes[i] = (1/(300*std::sqrt(3)))*router[i]*router[i]; // Still in mm
+         rinner[i] = 0;
+         router[i] = router[i] * mm;
+         zplanes[i] = zplanes[i] * mm;
+       }
 
-   pos = G4ThreeVector(17.5*cm, 0, 0);
-   G4SubtractionSolid* f2parentwithhole = new G4SubtractionSolid("f2parentwithhole", f2parent, f2hole, new G4RotationMatrix(pi/2,-pi/6,0), pos);
-   pos = G4ThreeVector(15*cm, 0, 0);
-   G4IntersectionSolid* f2nohole = new G4IntersectionSolid("f2 no hole", f2parentwithhole, f2daughter, new G4RotationMatrix(0,0,0), pos);
-   G4LogicalVolume* logicf2 = new G4LogicalVolume(f2nohole, FusedSilica, "f2");
-   G4VPhysicalVolume* physf2 = new G4PVPlacement(new G4RotationMatrix(pi, pi/6, -pi/2), G4ThreeVector(0, -151.*mm, -850.*mm),
-                                    logicf2, "f2", logicWorld, false, 0, checkOverlaps);
+       router[Nz-1] = router[Nz-2];
+       zplanes[Nz-1] = -5*cm;
+       G4Polycone* f2parent = new G4Polycone("f2parent",0*deg,360*deg,Nz,zplanes,rinner,router);
+       G4Tubs* f2daughter = new G4Tubs("f2daughter", 0, 10*cm, 100*cm, 0*deg, 360*deg);
+       G4Tubs* f2hole = new G4Tubs("f2hole", 0, 1*cm, 100*cm, 0*deg, 360*deg);
 
+       pos = G4ThreeVector(17.5*cm, 0, 0);
+       G4SubtractionSolid* f2parentwithhole = new G4SubtractionSolid("f2parentwithhole", f2parent, f2hole, new G4RotationMatrix(pi/2,-pi/6,0), pos);
+       pos = G4ThreeVector(15*cm, 0, 0);
+       G4IntersectionSolid* f2nohole = new G4IntersectionSolid("f2 no hole", f2parentwithhole, f2daughter, new G4RotationMatrix(0,0,0), pos);
+       G4LogicalVolume* logicf2 = new G4LogicalVolume(f2nohole, FusedSilica, "f2");
+       G4VPhysicalVolume* physf2 = new G4PVPlacement(new G4RotationMatrix(pi, pi/6, -pi/2), G4ThreeVector(0, -151.*mm, -850.*mm),
+                                        logicf2, "f2", logicWorld, false, 0, checkOverlaps);
+}
    // Spectrometer dipole
    G4double width = 20*mm, length = 300*mm, height = 100*mm;
    xmax = width/2+inset; xmin = xmax-width-inset; ymax = height/2+inset; ymin = ymax-height-inset;
@@ -1293,27 +1320,42 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
     */
 
     // Measurement plane acting as lanex screen
-    G4RotationMatrix* lanexRot = new G4RotationMatrix(0, 45*deg, 0);
-    G4ThreeVector lanexPos = G4ThreeVector(0., 30.*cm/std::sqrt(2), TCCDist - 2.5*m);
+    //G4RotationMatrix* lanexRot = new G4RotationMatrix(0, 45*deg, 0);
+    //G4ThreeVector lanexPos = G4ThreeVector(0., 30.*cm/std::sqrt(2), TCCDist - 2.5*m);
     //... or somewhere else
     G4RotationMatrix* measRot = new G4RotationMatrix(0, 0, 0);
-    G4ThreeVector measPos = G4ThreeVector(0., 0., TCCDist - 0.4*m);
+    //G4ThreeVector measPos = G4ThreeVector(0., 0., TCCDist - 0.4*m);
+    G4ThreeVector measPos = G4ThreeVector(0., 0., -90.0*cm);
 
-    G4Box* solidMeasurement = new G4Box("Measurement", 30.*mm, 30.*cm, .1*mm);
+    //G4Box* solidMeasurement = new G4Box("Measurement", 30.*mm, 30.*cm, .1*mm);
+    G4Box* solidMeasurement = new G4Box("Measurement", 10.*mm, 10.*mm, .1*mm);
 
     G4LogicalVolume* logicMeasurement = new G4LogicalVolume(solidMeasurement, Vacuum, "Measurement");
 
     G4VPhysicalVolume* physMeasurement =
-      new G4PVPlacement(lanexRot,
-                        lanexPos,
+      new G4PVPlacement(measRot,
+                        measPos,
                         logicMeasurement,             //its logical volume
                         "Measurement",                //its name
                         logicWorld,                //its mother  volume
                         false,                   //no boolean operation
                         0,                       //copy number
                         checkOverlaps);          //overlaps checking
+/* // This is for a lanex screen
+                        G4VPhysicalVolume* physMeasurement =
+                          new G4PVPlacement(lanexRot,
+                                            lanexPos,
+                                            logicMeasurement,             //its logical volume
+                                            "Measurement",                //its name
+                                            logicWorld,                //its mother  volume
+                                            false,                   //no boolean operation
+                                            0,                       //copy number
+                                            checkOverlaps);          //overlaps checking
 
+*/
     fScoringVolume = physMeasurement;
+
+
 
 
 
