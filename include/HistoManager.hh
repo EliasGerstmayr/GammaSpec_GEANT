@@ -62,6 +62,7 @@ class HistoManager
 
     TTree*			trackergamma;
     TTree*			trackerelec;
+    TTree*      trackerpositron;
     TTree*			exit;
     TTree*			taren;
     TTree*			dirs;

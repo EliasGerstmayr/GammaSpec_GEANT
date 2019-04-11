@@ -117,6 +117,9 @@ if(includeprofilestack_QUB){
 	//Tracker data tree - electrons
 	trackerelec = new TTree("TrackerElec","Tracker hit positions");
 	trackerelec->Branch("Tracker", &tracking,"x/D:y:z:px:py:pz:e");
+	//Tracker data tree - electrons
+	trackerpositron = new TTree("TrackerPositron","Tracker hit positions");
+	trackerpositron->Branch("Tracker", &tracking,"x/D:y:z:px:py:pz:e");
 	//Energy saved in target tree
 	taren = new TTree("A","Energy deposited in the target");
 	taren->Branch("Absorption", &targetenergy, "Energy/D:Event/I");
@@ -132,6 +135,7 @@ void HistoManager::save()
 		DataList->Write();
 		trackergamma->Write();
 		trackerelec->Write();
+		trackerpositron->Write();
 		OutPutfile->Close();
 
 	}
@@ -163,6 +167,8 @@ void HistoManager::FillTrackHit(G4double x, G4double y, G4double z, G4double px,
 			trackergamma->Fill();
 	} else if (partname == "e-"){
 			trackerelec->Fill();
+	} else if (partname == "e+"){
+			trackerpositron->Fill();
 	}
 
 	if(debug) {std::cout << partname << " passing into CsI stack." << std::endl;}

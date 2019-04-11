@@ -16,7 +16,7 @@ static const G4double crystalspacing = 5.0*mm;
 static const G4double dividerthickness = 0.49*mm;
 static const G4bool includeDividers = true;
 
-static const G4double frontplatethickness = 10.0*mm;
+static const G4double frontplatethickness = 1.0*mm; // 10.0*mm for steel, 1.0*mm for plastic
 static const G4bool includeplasticfrontplate = true; //if true replaces steel frontplate with plastic
 static const G4bool includefrontplate = true;
 
@@ -93,7 +93,7 @@ static const G4bool includefrontplate_DESY = false;
 static const G4bool includeprofilestack_QUB = true;
 static const int Ncrystalsx_QUB = 20;
 static const int Ncrystalsy_QUB = 20;
-static const G4double firstcrystalz_QUB = 170.0*cm;
+static const G4double firstcrystalz_QUB = 159.0*cm;
 
 static const G4double crystalx_QUB = 2.0*mm;
 static const G4double crystaly_QUB = 2.0*mm;
@@ -122,6 +122,11 @@ static const G4double ironconverterwidth = 10.0*mm;
 static const G4bool includeironconverter = false;
 static const G4double zposition_ironconverter = 80.0*cm;
 
+static const G4double bismuthconverterthickness = 1.0*mm;
+static const G4double bismuthconverterwidth = 10.0*mm;
+static const G4bool includebismuthconverter = true;
+static const G4double zposition_bismuthconverter = 80.0*cm;
+
 
 static const G4double kaptonthickness = 0.1*mm;
 static const G4double kaptonwidth = 100.*mm;
@@ -136,6 +141,8 @@ static const G4bool includebreadboard = false;
 static const G4bool includechamber = false;
 
 static const G4bool includeleadcollimator = false;
+
+static const G4bool includeparabola = false;
 
 // Magnet parameters
 static const G4bool includedipolemagnet = false;
