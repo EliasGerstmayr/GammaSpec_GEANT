@@ -3,7 +3,7 @@
 // CsI spectrometer
 
 // RAL Stack (2015)
-static const G4bool includespectrometer = true;
+static const G4bool includespectrometer = false;
 static const int Ncrystalsz = 45;
 static const int Ncrystalsy = 21;
 static const G4double firstcrystalz = 180.0*cm;
@@ -14,11 +14,11 @@ static const G4double crystalx = 50.0*mm;
 static const G4double crystalspacing = 5.0*mm;
 
 static const G4double dividerthickness = 0.49*mm;
-static const G4bool includeDividers = true;
+static const G4bool includeDividers = false;
 
 static const G4double frontplatethickness = 1.0*mm; // 10.0*mm for steel, 1.0*mm for plastic
-static const G4bool includeplasticfrontplate = true; //if true replaces steel frontplate with plastic
-static const G4bool includefrontplate = true;
+static const G4bool includeplasticfrontplate = false; //if true replaces steel frontplate with plastic
+static const G4bool includefrontplate = false;
 
 // Dual spectrometer
 
@@ -90,7 +90,7 @@ static const G4bool includefrontplate_DESY = false;
 
 // QUB 20x20 (2 mm x 2 mm x 20 mm)
 
-static const G4bool includeprofilestack_QUB = true;
+static const G4bool includeprofilestack_QUB = false;
 static const int Ncrystalsx_QUB = 20;
 static const int Ncrystalsy_QUB = 20;
 static const G4double firstcrystalz_QUB = 159.0*cm;
@@ -101,10 +101,24 @@ static const G4double crystalz_QUB = 20.0*mm;
 static const G4double crystalspacing_QUB = 2.1*mm;
 
 static const G4double coatingthickness_QUB = 0.09*mm;// crystals are spaced by 0.1 mm thick layers of aluminium foil
-static const G4bool includecoating_QUB = true;
+static const G4bool includecoating_QUB = false;
 
 static const G4double frontplatethickness_QUB = 10.00*mm; //Aluminium frame
-static const G4bool includefrontplate_QUB = true;
+static const G4bool includefrontplate_QUB = false;
+
+
+////////////////// DETECTOR DEVELOPMENT AREA //////////////////////
+
+static const G4bool includevacscreens = true;
+
+static const G4double screensize_x = 100.0*mm;
+static const G4double screensize_y = 100.0*mm;
+
+static const G4double firstscreenpos_z = 100.0*cm;
+
+static const int Nvacscreens = 5;
+
+static const G4double vacscreen_spacing = 10.0*cm;
 
 /////////////////////////////////////////////////////////////////
 // converters, windows etc.
@@ -124,7 +138,7 @@ static const G4double zposition_ironconverter = 80.0*cm;
 
 static const G4double bismuthconverterthickness = 1.0*mm;
 static const G4double bismuthconverterwidth = 10.0*mm;
-static const G4bool includebismuthconverter = true;
+static const G4bool includebismuthconverter = false;
 static const G4double zposition_bismuthconverter = 80.0*cm;
 
 
@@ -146,6 +160,7 @@ static const G4bool includeparabola = false;
 
 // Magnet parameters
 static const G4bool includedipolemagnet = false;
+static const G4bool includedipolemagnetfield = false;
 
 // For quadrupoles (dipole magnet strength is fixed to 1 tesla)
 static const G4bool includequads = false;

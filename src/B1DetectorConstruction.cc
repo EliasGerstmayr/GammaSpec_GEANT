@@ -158,6 +158,14 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 
   G4VisAttributes* cyanColour = new G4VisAttributes(G4Colour(0.,1.,1.));
   G4VisAttributes* redColour = new G4VisAttributes(G4Colour(1.,0.,0.));
+  G4VisAttributes* yellowColour = new G4VisAttributes(G4Colour(1.,1.,0.));
+
+
+  // Measurement Screens
+  G4Box* solidVacScreen = new G4Box("VacScreen", 0.5*screensize_x, 0.5*screensize_y, .1*mm);
+  G4LogicalVolume* logicVacScreen = new G4LogicalVolume(solidVacScreen, Vacuum, "VacScreen");
+  logicVacScreen->SetVisAttributes(yellowColour);
+  G4VPhysicalVolume* physVacScreen;
 
   // CsI crystals for RAL stack (2015)
   G4Box* solidCrystal = new G4Box("Crystal", 0.5*crystalx, 0.5*crystaly, 0.5*crystalz);
@@ -1196,30 +1204,35 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
        G4VPhysicalVolume* physf2 = new G4PVPlacement(new G4RotationMatrix(pi, pi/6, -pi/2), G4ThreeVector(0, -151.*mm, -850.*mm),
                                         logicf2, "f2", logicWorld, false, 0, checkOverlaps);
 }
-   // Spectrometer dipole
-   G4double width = 20*mm, length = 300*mm, height = 100*mm;
-   xmax = width/2+inset; xmin = xmax-width-inset; ymax = height/2+inset; ymin = ymax-height-inset;
-   zmax = -1.2*m + length/2 + inset;
-   zmin = -1.2*m - length/2 - inset;
 
- 	 G4Box* magnet3_box = new G4Box("magnet3_box", 0.5*(xmax-xmin), 0.5*(ymax-ymin), 0.5*(zmax-zmin));
-   G4LogicalVolume* magnet3_log = new G4LogicalVolume(magnet3_box, Vacuum, "magnet3_log");
-   G4VPhysicalVolume* magnet3_phys = new G4PVPlacement(0,G4ThreeVector(0.5*(xmax+xmin),0.5*(ymax+ymin),0.5*(zmax+zmin)),magnet3_log,"magnet3",logicWorld,false,0,checkOverlaps);
-   MagneticField* magfield3 = new MagneticField();
-   magfield3->SetMagFieldValue(1.*tesla, 0.);
-   magfield3->SetMagFieldParams(xmin, xmax, ymin, ymax, zmin, zmax, inset, false, false);
-   magfield3->SetEFieldValue(0.);
-   G4FieldManager* fieldmanager3 = new G4FieldManager();
-   fieldmanager3->SetDetectorField(magfield3);
-   G4EqMagElectricField *myEquation3 = new G4EqMagElectricField(magfield3);
-   G4MagIntegratorStepper* myStepper3 = new G4ClassicalRK4(myEquation3, 8);
-   G4MagInt_Driver* myIntgrDriver3 = new G4MagInt_Driver(deltaonestep*2., myStepper3,myStepper3->GetNumberOfVariables());
-   G4ChordFinder* myChordFinder3 = new G4ChordFinder(myIntgrDriver3);
-   fieldmanager3->SetChordFinder(myChordFinder3);
-   fieldmanager3->SetMinimumEpsilonStep(minEps);
-   fieldmanager3->SetMaximumEpsilonStep(maxEps);
-   fieldmanager3->SetDeltaOneStep(deltaonestep);
-   magnet3_log->SetFieldManager(fieldmanager3, true);
+
+   if(includedipolemagnetfield){
+         // Spectrometer dipole
+         G4double width = 20*mm, length = 300*mm, height = 100*mm;
+         xmax = width/2+inset; xmin = xmax-width-inset; ymax = height/2+inset; ymin = ymax-height-inset;
+         zmax = -1.2*m + length/2 + inset;
+         zmin = -1.2*m - length/2 - inset;
+
+       	 G4Box* magnet3_box = new G4Box("magnet3_box", 0.5*(xmax-xmin), 0.5*(ymax-ymin), 0.5*(zmax-zmin));
+         G4LogicalVolume* magnet3_log = new G4LogicalVolume(magnet3_box, Vacuum, "magnet3_log");
+         G4VPhysicalVolume* magnet3_phys = new G4PVPlacement(0,G4ThreeVector(0.5*(xmax+xmin),0.5*(ymax+ymin),0.5*(zmax+zmin)),magnet3_log,"magnet3",logicWorld,false,0,checkOverlaps);
+         MagneticField* magfield3 = new MagneticField();
+         magfield3->SetMagFieldValue(1.*tesla, 0.);
+         magfield3->SetMagFieldParams(xmin, xmax, ymin, ymax, zmin, zmax, inset, false, false);
+         magfield3->SetEFieldValue(0.);
+         G4FieldManager* fieldmanager3 = new G4FieldManager();
+         fieldmanager3->SetDetectorField(magfield3);
+         G4EqMagElectricField *myEquation3 = new G4EqMagElectricField(magfield3);
+         G4MagIntegratorStepper* myStepper3 = new G4ClassicalRK4(myEquation3, 8);
+         G4MagInt_Driver* myIntgrDriver3 = new G4MagInt_Driver(deltaonestep*2., myStepper3,myStepper3->GetNumberOfVariables());
+         G4ChordFinder* myChordFinder3 = new G4ChordFinder(myIntgrDriver3);
+         fieldmanager3->SetChordFinder(myChordFinder3);
+         fieldmanager3->SetMinimumEpsilonStep(minEps);
+         fieldmanager3->SetMaximumEpsilonStep(maxEps);
+         fieldmanager3->SetDeltaOneStep(deltaonestep);
+         magnet3_log->SetFieldManager(fieldmanager3, true);
+
+}
 
    if(includedipolemagnet){
      // Spectrometer dipole body
@@ -1318,6 +1331,42 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
                                                                0,                   // Copy number
                                                                checkOverlaps);      // Overlaps checking
     */
+
+    // Here add some measurement screens made out of Vacuum
+    // These were added in the context of the detector development June 2019
+
+    if(includevacscreens){
+
+              G4int vacscreenind = 0;
+              G4RotationMatrix* VacScreenRot = new G4RotationMatrix(0, 0, 0);
+
+              x = 0.0;
+              y = 0.0;
+
+              for (int i = 0; i< Nvacscreens; i++){
+
+                  z = -(firstscreenpos_z + i*vacscreen_spacing);
+                  pos = G4ThreeVector(x, y, z);
+                  vacscreenind = i;
+                  physVacScreen = new G4PVPlacement(VacScreenRot,
+                                    pos,
+                                    logicVacScreen,             //its logical volume
+                                    "VacScreen",                //its name
+                                    logicWorld,                //its mother  volume
+                                    false,                   //no boolean operation
+                                    0,                       //copy number
+                                    checkOverlaps);          //overlaps checking
+
+                  vacscreens[vacscreenind] = physVacScreen;
+
+            }
+      }
+
+
+
+
+
+
 
     // Measurement plane acting as lanex screen
     //G4RotationMatrix* lanexRot = new G4RotationMatrix(0, 45*deg, 0);

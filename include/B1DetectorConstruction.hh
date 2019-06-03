@@ -28,6 +28,8 @@ class B1DetectorConstruction : public G4VUserDetectorConstruction
     G4VPhysicalVolume*  crystals_HDual[Ncrystalsy_Dual * Ncrystalsz_HDual];
     G4VPhysicalVolume*  crystals_VDual[Ncrystalsx_Dual * Ncrystalsz_VDual];
 
+    G4VPhysicalVolume*  vacscreens[Nvacscreens];
+
   protected:
     G4VPhysicalVolume*  fScoringVolume;
     G4VPhysicalVolume*  rrVolume;
