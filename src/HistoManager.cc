@@ -120,11 +120,24 @@ if(includeprofilestack_QUB){
 	//Tracker data tree - electrons
 	trackerpositron = new TTree("TrackerPositron","Tracker hit positions");
 	trackerpositron->Branch("Tracker", &tracking,"x/D:y:z:px:py:pz:e");
+
+	if(includevacscreens){
+
+		for (int i = 1; i<= Nvacscreens; i++){
+				TString temp;
+				temp = "VacScreen";
+				temp += i;
+				trackergamma->Branch(temp, &tracking,"x/D:y:z:px:py:pz:e");
+				trackerelec->Branch(temp, &tracking,"x/D:y:z:px:py:pz:e");
+				trackerpositron->Branch(temp, &tracking,"x/D:y:z:px:py:pz:e");
+	}
+}
+
 	//Energy saved in target tree
 	taren = new TTree("A","Energy deposited in the target");
 	taren->Branch("Absorption", &targetenergy, "Energy/D:Event/I");
 	//Tree to measure the shower profile.
-	dirs = new TTree("D","Shower energy depisition locations");
+	dirs = new TTree("D","Shower energy deposition locations");
   dirs->Branch("Deposit", &directions, "px/D:py:pz:Edep:xP/I:yP");
 }
 
