@@ -16,3 +16,4 @@ src/.DS_Store
 100
 *.root
 data/Gamma_010MeV.root
+CMakeFile/
