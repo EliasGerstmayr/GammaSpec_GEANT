@@ -1,0 +1,10 @@
+./QED ./scripts_arbBrems/20180406r001/ArbBrems_20180406r001s006.mac;
+./QED ./scripts_arbBrems/20180406r001/ArbBrems_20180406r001s007.mac;
+./QED ./scripts_arbBrems/20180406r001/ArbBrems_20180406r001s008.mac;
+./QED ./scripts_arbBrems/20180406r001/ArbBrems_20180406r001s009.mac;
+./QED ./scripts_arbBrems/20180406r001/ArbBrems_20180406r001s010.mac;
+./QED ./scripts_arbBrems/20180406r001/ArbBrems_20180406r001s011.mac;
+./QED ./scripts_arbBrems/20180406r001/ArbBrems_20180406r001s012.mac;
+./QED ./scripts_arbBrems/20180406r001/ArbBrems_20180406r001s013.mac;
+./QED ./scripts_arbBrems/20180406r001/ArbBrems_20180406r001s014.mac;
+./QED ./scripts_arbBrems/20180406r001/ArbBrems_20180406r001s015.mac;
