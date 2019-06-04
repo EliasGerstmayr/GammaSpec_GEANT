@@ -1343,7 +1343,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
               x = 0.0;
               y = 0.0;
 
-              for (int i = 0; i< Nvacscreens; i++){
+              for (int i = 0; i<Nvacscreens; i++){
 
                   z = -(firstscreenpos_z + i*vacscreen_spacing);
                   pos = G4ThreeVector(x, y, z);
@@ -1354,10 +1354,11 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
                                     "VacScreen",                //its name
                                     logicWorld,                //its mother  volume
                                     false,                   //no boolean operation
-                                    0,                       //copy number
+                                    vacscreenind,            //copy number
                                     checkOverlaps);          //overlaps checking
 
                   vacscreens[vacscreenind] = physVacScreen;
+                  if (debug) G4cout << "Placing screen " << vacscreenind << G4endl;
 
             }
       }

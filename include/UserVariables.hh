@@ -90,7 +90,7 @@ static const G4bool includefrontplate_DESY = false;
 
 // QUB 20x20 (2 mm x 2 mm x 20 mm)
 
-static const G4bool includeprofilestack_QUB = false;
+static const G4bool includeprofilestack_QUB = true;
 static const int Ncrystalsx_QUB = 20;
 static const int Ncrystalsy_QUB = 20;
 static const G4double firstcrystalz_QUB = 159.0*cm;
@@ -101,10 +101,10 @@ static const G4double crystalz_QUB = 20.0*mm;
 static const G4double crystalspacing_QUB = 2.1*mm;
 
 static const G4double coatingthickness_QUB = 0.09*mm;// crystals are spaced by 0.1 mm thick layers of aluminium foil
-static const G4bool includecoating_QUB = false;
+static const G4bool includecoating_QUB = true;
 
 static const G4double frontplatethickness_QUB = 10.00*mm; //Aluminium frame
-static const G4bool includefrontplate_QUB = false;
+static const G4bool includefrontplate_QUB = true;
 
 
 ////////////////// DETECTOR DEVELOPMENT AREA //////////////////////
@@ -114,9 +114,9 @@ static const G4bool includevacscreens = true;
 static const G4double screensize_x = 100.0*mm;
 static const G4double screensize_y = 100.0*mm;
 
-static const G4double firstscreenpos_z = 100.0*cm;
+static const G4double firstscreenpos_z = 155.0*cm;
 
-static const int Nvacscreens = 5;
+static const int Nvacscreens = 2;
 
 static const G4double vacscreen_spacing = 10.0*cm;
 
@@ -169,6 +169,6 @@ static const G4double bfieldy = 0.*tesla;
 
 // Other flags
 static const G4bool checkOverlaps = false;
-static const G4bool debug = false;
+static const G4bool debug = true;
 static const G4bool plot = false;
 static const G4bool RRon = false;

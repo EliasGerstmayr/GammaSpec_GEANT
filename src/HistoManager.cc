@@ -22,6 +22,7 @@
 SH HistoManager::tracking;
 EN HistoManager::targetenergy;
 SH HistoManager::directions;
+SH HistoManager::vactracking;
 
 HistoManager::HistoManager():factoryOn(false)
 {
@@ -123,14 +124,29 @@ if(includeprofilestack_QUB){
 
 	if(includevacscreens){
 
-		for (int i = 1; i<= Nvacscreens; i++){
-				TString temp;
-				temp = "VacScreen";
-				temp += i;
-				trackergamma->Branch(temp, &tracking,"x/D:y:z:px:py:pz:e");
-				trackerelec->Branch(temp, &tracking,"x/D:y:z:px:py:pz:e");
-				trackerpositron->Branch(temp, &tracking,"x/D:y:z:px:py:pz:e");
-	}
+
+				vactrackGamma1 = new TTree("VactrackGamma1","Tracker hit positions");
+				vactrackElec1 = new TTree("VactrackElec1","Tracker hit positions");
+				vactrackPositron1 = new TTree("VactrackPositron1","Tracker hit positions");
+
+				vactrackGamma1->Branch("Tracker", &vactracking,"x/D:y:z:px:py:pz:e");
+				vactrackElec1->Branch("Tracker", &vactracking,"x/D:y:z:px:py:pz:e");
+				vactrackPositron1->Branch("Tracker", &vactracking,"x/D:y:z:px:py:pz:e");
+
+				if(Nvacscreens>1){
+
+					vactrackGamma2= new TTree("VactrackGamma2","Tracker hit positions");
+					vactrackElec2 = new TTree("VactrackElec2","Tracker hit positions");
+					vactrackPositron2 = new TTree("VactrackPositron2","Tracker hit positions");
+
+					vactrackGamma2->Branch("Tracker", &vactracking,"x/D:y:z:px:py:pz:e");
+					vactrackElec2->Branch("Tracker", &vactracking,"x/D:y:z:px:py:pz:e");
+					vactrackPositron2->Branch("Tracker", &vactracking,"x/D:y:z:px:py:pz:e");
+
+
+				}
+
+
 }
 
 	//Energy saved in target tree
@@ -149,6 +165,24 @@ void HistoManager::save()
 		trackergamma->Write();
 		trackerelec->Write();
 		trackerpositron->Write();
+
+		if(includevacscreens){
+
+
+				vactrackGamma1->Write();
+				vactrackElec1->Write();
+				vactrackPositron1->Write();
+
+				if(Nvacscreens>1){
+
+					vactrackGamma2->Write();
+					vactrackElec2->Write();
+					vactrackPositron2->Write();
+
+				}
+
+		}
+
 		OutPutfile->Close();
 
 	}
@@ -185,6 +219,42 @@ void HistoManager::FillTrackHit(G4double x, G4double y, G4double z, G4double px,
 	}
 
 	if(debug) {std::cout << partname << " passing into CsI stack." << std::endl;}
+
+}
+
+// Fill in details for several vacuum screens
+void HistoManager::FillVacTrackHit(G4double x, G4double y, G4double z, G4double px, G4double py, G4double pz, G4double e, G4String partname, G4int i){
+
+		vactracking.x = x;
+		vactracking.y = y;
+		vactracking.z = z;
+		vactracking.px = px;
+		vactracking.py = py;
+		vactracking.pz = pz;
+		vactracking.e = e;
+
+
+	if (partname == "gamma"){
+			if(i == 0){
+			vactrackGamma1->Fill();
+		} else if(i == 1){
+			vactrackGamma2->Fill();
+		}
+	} else if (partname == "e-"){
+		if(i == 0){
+			vactrackElec1->Fill();
+		} else if(i == 1){
+			vactrackElec2->Fill();
+		}
+	} else if (partname == "e+"){
+		if(i == 0){
+			vactrackPositron1->Fill();
+		} else if(i == 1){
+			vactrackElec2->Fill();
+		}
+	}
+
+	if(debug) {std::cout << partname << " passing through screens." << std::endl;}
 
 }
 

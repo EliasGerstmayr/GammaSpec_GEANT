@@ -35,6 +35,7 @@ class HistoManager
     void FillHisto(TH1D* hist, G4double e, G4double weight = 1.0);
     void FillHisto(TH2D* hist, G4int i, G4int j, G4double weight = 1.0);
    	void FillTrackHit(G4double, G4double, G4double, G4double, G4double, G4double, G4double, G4String);
+    void FillVacTrackHit(G4double, G4double, G4double, G4double, G4double, G4double, G4double, G4String, G4int);
     void FillDirections(G4ThreeVector dir, G4double edep, G4int xp, G4int yp);
     void FillEnergy(G4double En, G4int evt);
     G4String MakeFileName();
@@ -53,6 +54,7 @@ class HistoManager
 	  static SH tracking;
 	  static EN targetenergy;
 	  static SH directions;
+    static SH vactracking;
 
     G4String    fileName;
     G4String	  savef;
@@ -63,6 +65,12 @@ class HistoManager
     TTree*			trackergamma;
     TTree*			trackerelec;
     TTree*      trackerpositron;
+    TTree*      vactrackGamma1;
+    TTree*      vactrackElec1;
+    TTree*      vactrackPositron1;
+    TTree*      vactrackGamma2;
+    TTree*      vactrackElec2;
+    TTree*      vactrackPositron2;
     TTree*			exit;
     TTree*			taren;
     TTree*			dirs;

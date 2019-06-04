@@ -136,6 +136,32 @@ void B1SteppingAction::UserSteppingAction(const G4Step* step)
     }
   }
 
+  // Get position and energy when passing through vacuum tracker screens
+  // added for detector development June 2019
+
+  if(step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetName() == "VacScreen"){
+
+    G4int vacscreenind = step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetCopyNo();
+    if (debug) G4cout << "Copy number " << vacscreenind << G4endl;
+
+    if (step->GetTrack()->GetKineticEnergy() > 1.*MeV & step->GetTrack()->GetMomentum().z() < 0) {
+
+      if (debug) G4cout << "Hit screen " << vacscreenind << G4endl;
+      x = step->GetTrack()->GetPosition().x();
+      y = step->GetTrack()->GetPosition().y();
+      z = step->GetTrack()->GetPosition().z();
+      px = step->GetTrack()->GetMomentum().x();
+      py = step->GetTrack()->GetMomentum().y();
+      pz = step->GetTrack()->GetMomentum().z();
+      e = step->GetTrack()->GetKineticEnergy();
+
+      theta = -1.*std::asin(std::sqrt(px*px + py*py)/pz);
+
+      histoManager->FillVacTrackHit(x, y, z, px, py, pz, e, step->GetTrack()->GetDefinition()->GetParticleName(), vacscreenind);
+    }
+
+
+}
   // Get energy deposited in crystal (record deposited energy by particles in crystal)
   // crystals in the RAL 2015 stack
   if (step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetName() == "Crystal") {
