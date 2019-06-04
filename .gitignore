@@ -14,3 +14,5 @@ data/2019RRFeb_JenaStack_dualaxis_mono_fixed/.DS_Store
 src/.DS_Store
 .DS_Store
 100
+*.root
+data/Gamma_010MeV.root
