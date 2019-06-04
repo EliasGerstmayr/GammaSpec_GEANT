@@ -3,8 +3,8 @@
 // CsI spectrometer
 
 // RAL Stack (2015)
-static const G4bool includespectrometer = false;
-static const int Ncrystalsz = 45;
+static const G4bool includespectrometer = true;
+static const int Ncrystalsz = 12; // used to be 45!
 static const int Ncrystalsy = 21;
 static const G4double firstcrystalz = 180.0*cm;
 
@@ -14,11 +14,11 @@ static const G4double crystalx = 50.0*mm;
 static const G4double crystalspacing = 5.0*mm;
 
 static const G4double dividerthickness = 0.49*mm;
-static const G4bool includeDividers = false;
+static const G4bool includeDividers = true;
 
 static const G4double frontplatethickness = 1.0*mm; // 10.0*mm for steel, 1.0*mm for plastic
-static const G4bool includeplasticfrontplate = false; //if true replaces steel frontplate with plastic
-static const G4bool includefrontplate = false;
+static const G4bool includeplasticfrontplate = true; //if true replaces steel frontplate with plastic
+static const G4bool includefrontplate = true;
 
 // Dual spectrometer
 
@@ -116,9 +116,9 @@ static const G4double screensize_y = 100.0*mm;
 
 static const G4double firstscreenpos_z = 155.0*cm;
 
-static const int Nvacscreens = 2;
+static const int Nvacscreens = 3;
 
-static const G4double vacscreen_spacing = 10.0*cm;
+static const G4double vacscreen_spacing = 20.0*cm;
 
 /////////////////////////////////////////////////////////////////
 // converters, windows etc.
@@ -169,6 +169,6 @@ static const G4double bfieldy = 0.*tesla;
 
 // Other flags
 static const G4bool checkOverlaps = false;
-static const G4bool debug = true;
+static const G4bool debug = false;
 static const G4bool plot = false;
 static const G4bool RRon = false;

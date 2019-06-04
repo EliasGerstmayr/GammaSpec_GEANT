@@ -1,0 +1,13 @@
+
+*.root
+*.mat
+Runs/DetTests_RALPlastic_QUBGP/scripts_mono/.DS_Store
+Runs/DetTests_RALPlastic_QUBGP/.DS_Store
+Runs/RALPlastic_QUBGP/data/.DS_Store
+Runs/RALPlastic_QUBGP/scripts_mono/.DS_Store
+*.o
+*.o
+data/2015Mangles_vertdiv_Dec18/.DS_Store
+data/2015Mangles_vertdiv_hordiv_Dec18/.DS_Store
+data/2019RRFeb_JenaStack_dualaxis_mono_fixed/.DS_Store
+*.root

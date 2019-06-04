@@ -143,6 +143,20 @@ if(includeprofilestack_QUB){
 					vactrackElec2->Branch("Tracker", &vactracking,"x/D:y:z:px:py:pz:e");
 					vactrackPositron2->Branch("Tracker", &vactracking,"x/D:y:z:px:py:pz:e");
 
+					if(Nvacscreens>2){
+
+						vactrackGamma3= new TTree("VactrackGamma3","Tracker hit positions");
+						vactrackElec3 = new TTree("VactrackElec3","Tracker hit positions");
+						vactrackPositron3 = new TTree("VactrackPositron3","Tracker hit positions");
+
+						vactrackGamma3->Branch("Tracker", &vactracking,"x/D:y:z:px:py:pz:e");
+						vactrackElec3->Branch("Tracker", &vactracking,"x/D:y:z:px:py:pz:e");
+						vactrackPositron3->Branch("Tracker", &vactracking,"x/D:y:z:px:py:pz:e");
+
+
+
+					}
+
 
 				}
 
@@ -178,6 +192,15 @@ void HistoManager::save()
 					vactrackGamma2->Write();
 					vactrackElec2->Write();
 					vactrackPositron2->Write();
+
+						if(Nvacscreens>2){
+
+								vactrackGamma3->Write();
+								vactrackElec3->Write();
+								vactrackPositron3->Write();
+
+
+						}
 
 				}
 
@@ -239,18 +262,24 @@ void HistoManager::FillVacTrackHit(G4double x, G4double y, G4double z, G4double 
 			vactrackGamma1->Fill();
 		} else if(i == 1){
 			vactrackGamma2->Fill();
+		} else if(i == 2){
+			vactrackGamma3->Fill();
 		}
 	} else if (partname == "e-"){
 		if(i == 0){
 			vactrackElec1->Fill();
 		} else if(i == 1){
 			vactrackElec2->Fill();
+		}  else if(i == 2){
+			vactrackElec3->Fill();
 		}
 	} else if (partname == "e+"){
 		if(i == 0){
 			vactrackPositron1->Fill();
 		} else if(i == 1){
-			vactrackElec2->Fill();
+			vactrackPositron2->Fill();
+		} else if(i == 2){
+			vactrackPositron3->Fill();
 		}
 	}
 

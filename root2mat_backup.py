@@ -7,7 +7,7 @@ import os
 def GetTH1D(hist):
     Nbinsx = hist.GetNbinsX()
 
-    print("Size: " + str(Nbinsx))
+    print 'Size: ' + str(Nbinsx)
 
     buf = np.frombuffer(hist.GetArray(), dtype='d', count=(Nbinsx+2))
     nphist = np.reshape(buf, Nbinsx+2)
@@ -25,7 +25,7 @@ def GetTH2D(hist):
     Nbinsx = hist.GetNbinsX()
     Nbinsy = hist.GetNbinsY()
 
-    print("Size: " + str(Nbinsx) + ' x ' + str(Nbinsy))
+    print 'Size: ' + str(Nbinsx) + ' x ' + str(Nbinsy)
 
     buf = np.frombuffer(hist.GetArray(), dtype='d', count=(Nbinsx+2)*(Nbinsy+2))
     nphist = np.reshape(buf, (Nbinsy+2, Nbinsx+2))
@@ -56,7 +56,7 @@ def GetTree(T):
     # Dictionary of leaf data
     data = {}
 
-    print("Number of events: " + str(nevents) + " x " + str(numleaves) + " entries.")
+    print 'Number of events: ' + str(nevents) + ' x ' + str(numleaves) + ' entries.'
 
     for i in range(numleaves):
         leavename[i] = leaves.At(i).GetName()
@@ -82,7 +82,7 @@ def SaveMatfile(rootfile, matfile):
         keyname = k.GetName()
         classname = k.GetClassName()
 
-        print(keyname + " is of type " + classname)
+        print keyname + ' is of type ' + classname
 
         if classname == 'TH1D':
             hist, axis = GetTH1D(getattr(f, keyname))

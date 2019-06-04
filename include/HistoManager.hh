@@ -71,6 +71,9 @@ class HistoManager
     TTree*      vactrackGamma2;
     TTree*      vactrackElec2;
     TTree*      vactrackPositron2;
+    TTree*      vactrackGamma3;
+    TTree*      vactrackElec3;
+    TTree*      vactrackPositron3;
     TTree*			exit;
     TTree*			taren;
     TTree*			dirs;
