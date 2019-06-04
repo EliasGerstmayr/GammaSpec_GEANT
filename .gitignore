@@ -105,3 +105,6 @@ CMakeFiles/feature_tests.c
 CMakeFiles/feature_tests.cxx
 data/Gamma_010MeV.root
 *.mac
+*.out
+*.bin
+*.cmake
