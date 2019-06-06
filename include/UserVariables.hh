@@ -4,7 +4,7 @@
 
 // RAL Stack (2015)
 static const G4bool includespectrometer = true;
-static const int Ncrystalsz = 12; // used to be 45!
+static const int Ncrystalsz = 45;
 static const int Ncrystalsy = 21;
 static const G4double firstcrystalz = 180.0*cm;
 
@@ -110,19 +110,20 @@ static const G4bool includefrontplate_QUB = true;
 ////////////////// DETECTOR DEVELOPMENT AREA //////////////////////
 
 static const G4bool includevacscreens = true;
+static const G4bool det_development_mode = true;
 
 static const G4double screensize_x = 100.0*mm;
 static const G4double screensize_y = 100.0*mm;
 
 static const G4double firstscreenpos_z = 155.0*cm;
 
-static const int Nvacscreens = 3;
+static const int Nvacscreens = 2;
 
 static const G4double vacscreen_spacing = 20.0*cm;
 
 static const G4bool include_detfilter = true;
-static const G4double detfilter_pos_z =  firstcrystalz + Ncrystalsz*crystalspacing + 5.0*mm;
-static const G4double detfilter_thickness = 2.0*mm;
+static const int detfilter_pos_z_Ncrystalsz = 12; // afer how many crystals place this?
+static const G4double detfilter_thickness = 10.0*mm;
 
 /////////////////////////////////////////////////////////////////
 // converters, windows etc.

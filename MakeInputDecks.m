@@ -1,5 +1,5 @@
 %variable = linspace(0, 1, 20);
-variable = 10:10:500;
+variable = 10:10:900;
 
 % Based on the input decks runGamma
 %executecommand = '';

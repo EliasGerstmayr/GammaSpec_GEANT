@@ -254,6 +254,19 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   G4LogicalVolume* logicVDivider = new G4LogicalVolume(solidVDivider, Aluminium, "VDivider");
   G4VPhysicalVolume* physVDivider;
 
+ // shorter horizontal divider for stack due to plate inserted in det mode
+  G4double detmode_HDividerFront_lengthz = (detfilter_pos_z_Ncrystalsz-1)*crystalspacing + crystalz;
+  G4double detmode_HDividerBack_lengthz = (Ncrystalsz-detfilter_pos_z_Ncrystalsz-1)*crystalspacing + crystalz;
+
+  G4Box* solidDetmode_HDividerFront = new G4Box("Detmode_HDividerFront", 0.5*crystalx, 0.5*dividerthickness, 0.5*detmode_HDividerFront_lengthz);
+  G4LogicalVolume* logicDetmode_HDividerFront = new G4LogicalVolume(solidDetmode_HDividerFront, Aluminium, "Detmode_HDividerFront");
+  G4VPhysicalVolume* physDetmode_HDividerFront;
+
+  G4Box* solidDetmode_HDividerBack = new G4Box("Detmode_HDividerBack", 0.5*crystalx, 0.5*dividerthickness, 0.5*detmode_HDividerBack_lengthz);
+  G4LogicalVolume* logicDetmode_HDividerBack = new G4LogicalVolume(solidDetmode_HDividerBack, Aluminium, "Detmode_HDividerBack");
+  G4VPhysicalVolume* physDetmode_HDividerBack;
+
+
   // Dual axis stack - dividers and spacers
   G4double totallengthy_Dual = (Ncrystalsy_Dual - 1)*crystalspacing_Dual + crystaly_Dual;
   G4double totallengthx_Dual = totallengthy_Dual;
@@ -363,6 +376,20 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
       for (int j = 0; j < Ncrystalsz; j++) {
         y = 0.5*((Ncrystalsy-1) * crystalspacing) - i * crystalspacing;
         z = -(firstcrystalz + j * crystalspacing);
+
+        if (det_development_mode){
+            if(include_detfilter){
+
+                if(j>(detfilter_pos_z_Ncrystalsz-1)){ // after defined number of z layers add an offset to make space for the extra plate
+
+                  z = z - detfilter_thickness - 0.01*mm;
+
+                }
+
+            }
+        }
+
+
         pos = G4ThreeVector(x, y, z);
         crystalind = i * Ncrystalsz + j;
         physCrystal =   new G4PVPlacement(0,                // Rotation
@@ -382,18 +409,51 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
     if (includeDividers) {
       // Place horizontal dividers
       for (int i = 0; i < Ncrystalsy-1; i++ ) {
-        x = 0;
-        y = 0.5*((Ncrystalsy-1) * crystalspacing) - (i + 0.5) * crystalspacing;
-        z = -(firstcrystalz + 0.5*((Ncrystalsz - 1) * crystalspacing));
-        pos = G4ThreeVector(x, y, z);
-        physHDivider =   new G4PVPlacement(0,                // Rotation
-                                           pos,              // Position
-                                           logicHDivider,    // Logical volume
-                                           "HDivider",       // Name
-                                           logicWorld,       // Mother  volume
-                                           false,            // No boolean operation
-                                           0,                // Copy number
-                                           checkOverlaps);   // Overlaps checking
+
+        if((include_detfilter)&(det_development_mode)){
+
+              x = 0;
+              y = 0.5*((Ncrystalsy-1) * crystalspacing) - (i + 0.5) * crystalspacing;
+
+              z = -(firstcrystalz + 0.5*((detfilter_pos_z_Ncrystalsz - 1) * crystalspacing));
+              pos = G4ThreeVector(x, y, z);
+              physDetmode_HDividerFront =   new G4PVPlacement(0,                // Rotation
+                                                 pos,              // Position
+                                                 logicDetmode_HDividerFront,    // Logical volume
+                                                 "Detmode_HDividerFront",       // Name
+                                                 logicWorld,       // Mother  volume
+                                                 false,            // No boolean operation
+                                                 0,                // Copy number
+                                                 checkOverlaps);   // Overlaps checking
+
+
+              z = -(firstcrystalz + (detfilter_pos_z_Ncrystalsz-1)*crystalspacing + 0.5*crystalspacing + detfilter_thickness + 0.5*((Ncrystalsz - detfilter_pos_z_Ncrystalsz - 1) * crystalspacing) + 0.5*crystalspacing);
+              pos = G4ThreeVector(x, y, z);
+              physDetmode_HDividerBack =   new G4PVPlacement(0,                // Rotation
+                                                pos,              // Position
+                                                logicDetmode_HDividerBack,    // Logical volume
+                                                "Detmode_HDividerBack",       // Name
+                                                logicWorld,       // Mother  volume
+                                                false,            // No boolean operation
+                                                0,                // Copy number
+                                                checkOverlaps);   // Overlaps checking
+
+
+
+        } else{
+              x = 0;
+              y = 0.5*((Ncrystalsy-1) * crystalspacing) - (i + 0.5) * crystalspacing;
+              z = -(firstcrystalz + 0.5*((Ncrystalsz - 1) * crystalspacing));
+              pos = G4ThreeVector(x, y, z);
+              physHDivider =   new G4PVPlacement(0,                // Rotation
+                                                 pos,              // Position
+                                                 logicHDivider,    // Logical volume
+                                                 "HDivider",       // Name
+                                                 logicWorld,       // Mother  volume
+                                                 false,            // No boolean operation
+                                                 0,                // Copy number
+                                                 checkOverlaps);   // Overlaps checking
+        }
       }
 
       // Place vertical dividers
@@ -401,6 +461,20 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
         x = 0;
         y = 0;
         z = -(firstcrystalz + 0.5*crystalspacing + j*crystalspacing);
+
+        if (det_development_mode){
+            if(include_detfilter){
+
+                if(j>(detfilter_pos_z_Ncrystalsz-2)){ // after defined number of z layers add an offset to make space for the extra plate
+
+                  z = z - detfilter_thickness - 0.01*mm;
+
+                }
+
+            }
+        }
+
+
         pos = G4ThreeVector(x, y, z);
         physVDivider =   new G4PVPlacement(0,                // Rotation
                                            pos,              // Position
@@ -453,9 +527,10 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   if (include_detfilter){
 
 
+
     x = 0;
     y = 0;
-    z = -(detfilter_pos_z);
+    z = -(firstcrystalz + (detfilter_pos_z_Ncrystalsz-1)*crystalspacing + 0.5*crystalspacing + 0.5*detfilter_thickness);
     pos = G4ThreeVector(x, y, z);
     physDetFilter =   new G4PVPlacement(0,              // Rotation
                                        pos,              // Position
