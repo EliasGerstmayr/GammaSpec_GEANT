@@ -120,6 +120,10 @@ static const int Nvacscreens = 3;
 
 static const G4double vacscreen_spacing = 20.0*cm;
 
+static const G4bool include_detfilter = true;
+static const G4double detfilter_pos_z =  firstcrystalz + Ncrystalsz*crystalspacing + 5.0*mm;
+static const G4double detfilter_thickness = 2.0*mm;
+
 /////////////////////////////////////////////////////////////////
 // converters, windows etc.
 

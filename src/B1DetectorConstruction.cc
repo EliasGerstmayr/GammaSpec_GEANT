@@ -285,6 +285,9 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   G4LogicalVolume* logicFrontPlate = new G4LogicalVolume(solidFrontPlate, SS316, "Front Plate");
   G4VPhysicalVolume* physFrontPlate;
 
+  G4Box* solidDetFilter = new G4Box("DetFilter", 0.5*crystalx, 0.5*totallengthy, 0.5*detfilter_thickness);
+  G4LogicalVolume* logicDetFilter = new G4LogicalVolume(solidDetFilter, SS316, "Det Filter");
+  G4VPhysicalVolume* physDetFilter;
 
   //Titanium Dioxide 'front plate'/reflector coating for the profile stacks (0.5mm TiO2)
   //Jena
@@ -443,6 +446,28 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
                                            checkOverlaps);   // Overlaps checking
                                        }
     }
+  }
+
+
+
+  if (include_detfilter){
+
+
+    x = 0;
+    y = 0;
+    z = -(detfilter_pos_z);
+    pos = G4ThreeVector(x, y, z);
+    physDetFilter =   new G4PVPlacement(0,              // Rotation
+                                       pos,              // Position
+                                       logicDetFilter,  // Logical volume
+                                       "DetFilter",    // Name
+                                       logicWorld,       // Mother  volume
+                                       false,            // No boolean operation
+                                       0,                // Copy number
+                                       checkOverlaps);   // Overlaps checking
+
+
+
   }
 
   // Jena CsI stack (2018)
