@@ -121,9 +121,18 @@ static const int Nvacscreens = 2;
 
 static const G4double vacscreen_spacing = 20.0*cm;
 
-static const G4bool include_detfilter = true;
+ //insert slab of steel in the spectrometer stack to dampen lower energy radiation
+static const G4bool include_detfilter = false;
 static const int detfilter_pos_z_Ncrystalsz = 12; // afer how many crystals place this?
-static const G4double detfilter_thickness = 10.0*mm;
+static const G4double detfilter_thickness = 50.0*mm;
+
+//add magnetic fields?
+static const G4bool include_detmagnet = true;
+static const G4double detmagnet_Bfield_T = 2.0*tesla; // was 0.9
+static const G4double detmagnet_size_z = 10.0*cm;
+static const G4double detmagnet_size_x = 4.0*cm;
+static const G4double detmagnet_size_y = 5.0*cm;
+static const G4double detmagnet_pos_z = firstcrystalz_QUB+0.5*detmagnet_size_z+0.5*crystalz_QUB+1.0*cm;
 
 /////////////////////////////////////////////////////////////////
 // converters, windows etc.

@@ -1306,6 +1306,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 }
 
 
+
    if(includedipolemagnetfield){
          // Spectrometer dipole
          G4double width = 20*mm, length = 300*mm, height = 100*mm;
@@ -1333,6 +1334,39 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
          magnet3_log->SetFieldManager(fieldmanager3, true);
 
 }
+
+    G4double detmagnet_inset = 5.*mm;
+
+if ((include_detmagnet) & (det_development_mode)){
+      // Spectrometer dipole
+        G4double width = detmagnet_size_x, length = detmagnet_size_z, height = detmagnet_size_y;
+        xmax = width/2+detmagnet_inset; xmin = xmax-width-detmagnet_inset; ymax = height/2+detmagnet_inset; ymin = ymax-height-detmagnet_inset;
+        zmax = -detmagnet_pos_z + length/2 + detmagnet_inset;
+        zmin = -detmagnet_pos_z - length/2 - detmagnet_inset;
+
+        G4Box* detmagnet_box = new G4Box("detmagnet_box", 0.5*(xmax-xmin), 0.5*(ymax-ymin), 0.5*(zmax-zmin));
+        G4LogicalVolume* detmagnet_log = new G4LogicalVolume(detmagnet_box, Vacuum, "detmagnet_log");
+        G4VPhysicalVolume* detmagnet_phys = new G4PVPlacement(0,G4ThreeVector(0.5*(xmax+xmin),0.5*(ymax+ymin),0.5*(zmax+zmin)),detmagnet_log,"detmagnet3",logicWorld,false,0,checkOverlaps);
+        MagneticField* detmagfield = new MagneticField();
+        detmagfield->SetMagFieldValue(detmagnet_Bfield_T, 0.);
+        detmagfield->SetMagFieldParams(xmin, xmax, ymin, ymax, zmin, zmax, detmagnet_inset, false, false);
+        detmagfield->SetEFieldValue(0.);
+        G4FieldManager* detfieldmanager = new G4FieldManager();
+        detfieldmanager->SetDetectorField(detmagfield);
+        G4EqMagElectricField *myDetEquation = new G4EqMagElectricField(detmagfield);
+        G4MagIntegratorStepper* myDetStepper = new G4ClassicalRK4(myDetEquation, 8);
+        G4MagInt_Driver* myDetIntgrDriver = new G4MagInt_Driver(deltaonestep*2., myDetStepper,myDetStepper->GetNumberOfVariables());
+        G4ChordFinder* myDetChordFinder = new G4ChordFinder(myDetIntgrDriver);
+        detfieldmanager->SetChordFinder(myDetChordFinder);
+        detfieldmanager->SetMinimumEpsilonStep(minEps);
+        detfieldmanager->SetMaximumEpsilonStep(maxEps);
+        detfieldmanager->SetDeltaOneStep(deltaonestep);
+        detmagnet_log->SetFieldManager(detfieldmanager, true);
+
+}
+
+
+
 
    if(includedipolemagnet){
      // Spectrometer dipole body
