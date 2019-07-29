@@ -159,7 +159,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   G4VisAttributes* cyanColour = new G4VisAttributes(G4Colour(0.,1.,1.));
   G4VisAttributes* redColour = new G4VisAttributes(G4Colour(1.,0.,0.));
   G4VisAttributes* yellowColour = new G4VisAttributes(G4Colour(1.,1.,0.));
-
+  G4VisAttributes* orangeColour = new G4VisAttributes(G4Colour(1.,0.55,0.));
 
   // Measurement Screens
   G4Box* solidVacScreen = new G4Box("VacScreen", 0.5*screensize_x, 0.5*screensize_y, .1*mm);
@@ -330,6 +330,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   // Kapton window
   G4Box* solidKaptonWindow = new G4Box("Kapton Window", 0.51*kaptonwidth, 0.51*kaptonwidth, 0.51*kaptonthickness);
   G4LogicalVolume* logicKaptonWindow = new G4LogicalVolume(solidKaptonWindow, Kapton, "Kapton Window");
+  logicKaptonWindow->SetVisAttributes(orangeColour);
   G4VPhysicalVolume* physKaptonWindow;
 
   // Al foil
@@ -966,7 +967,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   if (includekaptonwindow) {
     x = 0;
     y = 0;
-    z = -1.39*m;
+    z = -kapton_pos_z;
     pos = G4ThreeVector(x, y, z);
     physFrontPlate =   new G4PVPlacement(0,                // Rotation
                                        pos,                // Position
@@ -982,7 +983,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   if (includealuminium) {
     x = 0;
     y = 0;
-    z = -1.38*m;
+    z = -aluminium_pos_z;
     pos = G4ThreeVector(x, y, z);
     physFrontPlate =   new G4PVPlacement(0,                   // Rotation
                                          pos,                 // Position

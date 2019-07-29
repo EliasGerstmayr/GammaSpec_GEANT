@@ -81,7 +81,7 @@ void HistoManager::book()
 
 	// Particle gun energies
 	//										Name					Title			Nbins Lower   Upper
-	gunEnHist = new TH1D("GunEnergy", "GunEnergy", 100, 0.*MeV, 2200.*MeV);
+	gunEnHist = new TH1D("GunEnergy", "GunEnergy", 1000, gun_histo_min_MeV*MeV, gun_histo_max_MeV*MeV);
 	DataList->Add(gunEnHist);
 	// CsI crystal energies
 	// Bins like linspace(x0, x1, Nx) etc				 Nx          x0   x1               Ny           y0   y1
